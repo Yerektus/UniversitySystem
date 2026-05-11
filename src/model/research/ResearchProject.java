@@ -2,17 +2,16 @@ package model.research;
 
 import model.exceptions.NotAResearcherException;
 import model.users.User;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResearchProject {
+public class ResearchProject implements Serializable {
 
-    private String projectId;
-
+	private static final long serialVersionUID = 1L;
+	private String projectId;
     private String topic;
-
     private List<ResearchPaper> publishedPapers;
-
     private List<Researcher> participants;
 
     public ResearchProject(String projectId, String topic) {

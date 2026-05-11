@@ -1,10 +1,12 @@
 package model.academic;
 
 import model.users.Student;
+import java.io.Serializable;
 
-public class Mark {
+public class Mark implements Serializable {
 
-    private Student student;
+	private static final long serialVersionUID = 1L;
+	private Student student;
     private Course course;
     private LessonGroup lessonGroup;
     private double firstAttestation;

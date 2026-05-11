@@ -2,20 +2,17 @@ package model.communication;
 
 import model.enums.RequestStatus;
 import model.users.User;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Request {
+public class Request implements Serializable {
 
-    private String requestId;
-
+	private static final long serialVersionUID = 1L;
+	private String requestId;
     private String topic;
-
     private User sender;
-
     private String description;
-
     private RequestStatus status;
-
     private Date createdAt;
 
     public Request(String requestId, String topic, User sender, String description) {

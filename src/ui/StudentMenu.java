@@ -107,7 +107,11 @@ public class StudentMenu extends BaseMenu {
 
         Course selected = courses.get(idx);
         System.out.println("Registering for: " + selected.getName());
-        student.registerForCourse(selected);
+        try {
+            student.registerForCourse(selected);
+        } catch (model.exceptions.CreditLimitExceededException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
         pause();
     }
 

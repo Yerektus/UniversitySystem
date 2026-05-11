@@ -1,12 +1,15 @@
 package model.research;
 
 import model.enums.CitationFormat;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class ResearchPaper implements Comparable<ResearchPaper> {
+public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
     public static final Comparator<ResearchPaper> BY_CITATIONS =
             Comparator.comparingInt(ResearchPaper::getCitations).reversed();

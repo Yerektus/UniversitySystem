@@ -1,19 +1,16 @@
 package model.users;
 
 import model.enums.Language;
+import java.io.Serializable;
 
-public abstract class User {
+public abstract class User implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String id;
-
     private String password;
-
     private String firstName;
-
     private String lastName;
-
     private String email;
-
     private Language language;
 
     public User(String id, String password, String firstName, String lastName, String email, Language language) {

@@ -1,33 +1,27 @@
 package model.academic;
+
 import model.enums.DayOfWeek;
 import model.enums.LessonType;
 import model.users.Student;
 import model.users.Teacher;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-public class LessonGroup {
 
-    private String groupId;
+public class LessonGroup implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	private String groupId;
     private Course course;
-
     private LessonType type;
-
     private Teacher teacher;
-
     private DayOfWeek dayOfWeek;
-
     private String startTime;
-
     private String endTime;
-
     private String room;
-
     private int capacity;
-
     private String semester;
-
     private List<Enrollment> enrollments;
 
     public LessonGroup(String groupId, Course course, LessonType type, Teacher teacher,

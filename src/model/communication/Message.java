@@ -1,30 +1,23 @@
 package model.communication;
 
 import model.users.User;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Message {
+public class Message implements Serializable {
 
-    private String messageId;
-
+	private static final long serialVersionUID = 1L;
+	private String messageId;
     private String message;
-
     private String topic;
-
     private User sender;
-
     private User receiver;
-
     private String content;
-
     private boolean pinned;
-
     private Date publishedAt;
-
     private User author;
-
     private List<String> comments;
 
     public Message(String messageId, String topic, String content, User sender, User receiver) {

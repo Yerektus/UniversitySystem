@@ -10,22 +10,15 @@ import java.util.List;
 
 public class Student extends User {
 
-    public static final int MAX_CREDITS = 21;
-
+	private static final long serialVersionUID = 1L;
+	public static final int MAX_CREDITS = 21;
     public static final int MAX_FAILS = 3;
-
     private String major;
-
     private int year;
-
     private double gpa;
-
     private int totalCredits;
-
     private int failCount;
-
     private List<Enrollment> enrollments;
-
     private List<StudentOrganization> organizations;
 
     public Student(String id, String password, String firstName, String lastName,

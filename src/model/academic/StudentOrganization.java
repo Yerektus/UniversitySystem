@@ -1,12 +1,14 @@
 package model.academic;
 
 import model.users.Student;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentOrganization {
+public class StudentOrganization implements Serializable {
 
-    private String orgId;
+	private static final long serialVersionUID = 1L;
+	private String orgId;
     private String name;
     private String target;
     private List<Student> members;

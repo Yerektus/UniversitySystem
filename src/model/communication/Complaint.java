@@ -1,20 +1,17 @@
 package model.communication;
 
 import model.enums.UrgencyLevel;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Complaint {
+public class Complaint implements Serializable {
 
-    private String complaintId;
-
+	private static final long serialVersionUID = 1L;
+	private String complaintId;
     private String sender;
-
     private String target;
-
     private String description;
-
     private UrgencyLevel urgency;
-
     private Date createdAt;
 
     public Complaint(String complaintId, String sender, String target,

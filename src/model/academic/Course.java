@@ -1,27 +1,23 @@
 package model.academic;
+
 import model.enums.CourseType;
 import model.users.Student;
 import model.users.Teacher;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-public class Course {
 
-    private String courseId;
+public class Course implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	private String courseId;
     private String name;
-
     private int credits;
-
     private CourseType type;
-
     private String targetMajor;
-
     private int targetYear;
-
     private List<Teacher> lecturers;
-
     private List<Teacher> practiceInstructors;
-
     private List<Student> enrolledStudents;
 
     public Course(String courseId, String name, int credits, CourseType type) {
@@ -82,4 +78,4 @@ public class Course {
     public String toString() {
         return "Course{id='" + courseId + "', name='" + name + "', credits=" + credits + ", type=" + type + "}";
     }
-} 
+}

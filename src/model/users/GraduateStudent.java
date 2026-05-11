@@ -12,7 +12,8 @@ import java.util.List;
 
 public class GraduateStudent extends Student implements Researcher {
 
-    private GraduateType graduateType;
+	private static final long serialVersionUID = 1L;
+	private GraduateType graduateType;
     private String target;
     private List<ResearchPaper> papers;
     private Researcher supervisor;

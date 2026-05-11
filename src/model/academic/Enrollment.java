@@ -2,11 +2,13 @@ package model.academic;
 
 import model.enums.DayOfWeek;
 import model.users.Student;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Enrollment {
+public class Enrollment implements Serializable {
 
-    private String enrollmentId;
+	private static final long serialVersionUID = 1L;
+	private String enrollmentId;
     private Student student;
     private Course course;
     private LessonGroup lessonGroup;

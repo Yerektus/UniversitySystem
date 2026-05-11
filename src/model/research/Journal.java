@@ -1,15 +1,14 @@
 package model.research;
 import model.users.User;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-public class Journal {
+public class Journal implements Serializable {
 
-    private String journalId;
-
+	private static final long serialVersionUID = 1L;
+	private String journalId;
     private String name;
-
     private List<ResearchPaper> papers;
-
     private List<User> subscribers;
 
     public Journal(String journalId, String name) {

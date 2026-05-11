@@ -16,8 +16,8 @@ import java.util.List;
 
 public class Teacher extends Employee implements Researcher {
 
-    private TeacherPosition position;
-
+	private static final long serialVersionUID = 1L;
+	private TeacherPosition position;
     private List<ResearchPaper> papers;
 
     public Teacher(String id, String password, String firstName, String lastName,
