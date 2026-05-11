@@ -1,10 +1,11 @@
 package model.research;
-
-import model.enums.CitationFormat;
-
+ 
+import java.util.Comparator;
+import java.util.List;
+ 
 public interface Researcher {
+    List<ResearchPaper> getPapers();
     int calculateHindex();
-    void printPapers(CitationFormat format);
+    void printPapers(Comparator<ResearchPaper> c);
     void publishPaper(ResearchPaper paper);
-    void printProjectResearchPaper(ResearchPaper paper);
 }

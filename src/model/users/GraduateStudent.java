@@ -1,18 +1,20 @@
 package model.users;
 
+import model.enums.CitationFormat;
 import model.enums.GraduateType;
 import model.enums.Language;
 import model.research.ResearchPaper;
 import model.research.Researcher;
-import model.enums.CitationFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class GraduateStudent extends Student implements Researcher {
 
     private GraduateType graduateType;
     private String target;
-    private List<ResearchPaper> diplomaProjects;
+    private List<ResearchPaper> papers;
+    private Researcher supervisor;
 
     public GraduateStudent(String id, String password, String firstName, String lastName,
                            String email, Language language, String major, int year,
@@ -20,20 +22,20 @@ public class GraduateStudent extends Student implements Researcher {
         super(id, password, firstName, lastName, email, language, major, year);
         this.graduateType = graduateType;
         this.target = target;
-        this.diplomaProjects = new ArrayList<>();
+        this.papers = new ArrayList<>();
     }
 
-    public void addDiplomaProject(ResearchPaper paper) {
-        diplomaProjects.add(paper);
-        System.out.println("Diploma project added: " + paper.getTitle());
+    @Override
+    public List<ResearchPaper> getPapers() {
+        return papers;
     }
 
     @Override
     public int calculateHindex() {
-        int h = 0;
         List<Integer> citations = new ArrayList<>();
-        for (ResearchPaper p : diplomaProjects) citations.add(p.getCitations());
+        for (ResearchPaper p : papers) citations.add(p.getCitations());
         citations.sort((a, b) -> b - a);
+        int h = 0;
         for (int i = 0; i < citations.size(); i++) {
             if (citations.get(i) >= i + 1) h = i + 1;
             else break;
@@ -42,22 +44,26 @@ public class GraduateStudent extends Student implements Researcher {
     }
 
     @Override
-    public void printPapers(CitationFormat format) {
-        for (ResearchPaper p : diplomaProjects) {
-            System.out.println(p.getCitation(format));
-        }
+    public void printPapers(Comparator<ResearchPaper> c) {
+        List<ResearchPaper> sorted = new ArrayList<>(papers);
+        sorted.sort(c);
+        for (ResearchPaper p : sorted) System.out.println(p.getCitation(CitationFormat.PLAIN_TEXT));
     }
 
     @Override
     public void publishPaper(ResearchPaper paper) {
-        diplomaProjects.add(paper);
+        papers.add(paper);
         System.out.println(getFirstName() + " published: " + paper.getTitle());
     }
 
-    @Override
-    public void printProjectResearchPaper(ResearchPaper paper) {
-        System.out.println("Project paper: " + paper.getTitle());
+    /** Diploma projects are the papers published by this graduate student. */
+    public List<ResearchPaper> getDiplomaProjects() {
+        return papers;
     }
+
+    public Researcher getSupervisor() { return supervisor; }
+
+    public void setSupervisor(Researcher supervisor) { this.supervisor = supervisor; }
 
     public GraduateType getGraduateType() { return graduateType; }
 
@@ -67,7 +73,5 @@ public class GraduateStudent extends Student implements Researcher {
 
     public void setTarget(String target) { this.target = target; }
 
-    public List<ResearchPaper> getDiplomaProjects() { return diplomaProjects; }
-
-    public void setDiplomaProjects(List<ResearchPaper> diplomaProjects) { this.diplomaProjects = diplomaProjects; }
+    public void setPapers(List<ResearchPaper> papers) { this.papers = papers; }
 }

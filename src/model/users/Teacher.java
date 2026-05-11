@@ -10,6 +10,7 @@ import model.enums.UrgencyLevel;
 import model.research.ResearchPaper;
 import model.research.Researcher;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -59,11 +60,16 @@ public class Teacher extends Employee implements Researcher {
     }
 
     @Override
+    public List<ResearchPaper> getPapers() {
+        return papers;
+    }
+
+    @Override
     public int calculateHindex() {
-        int h = 0;
         List<Integer> citations = new ArrayList<>();
         for (ResearchPaper p : papers) citations.add(p.getCitations());
         citations.sort((a, b) -> b - a);
+        int h = 0;
         for (int i = 0; i < citations.size(); i++) {
             if (citations.get(i) >= i + 1) h = i + 1;
             else break;
@@ -72,8 +78,10 @@ public class Teacher extends Employee implements Researcher {
     }
 
     @Override
-    public void printPapers(CitationFormat format) {
-        for (ResearchPaper p : papers) System.out.println(p.getCitation(format));
+    public void printPapers(Comparator<ResearchPaper> c) {
+        List<ResearchPaper> sorted = new ArrayList<>(papers);
+        sorted.sort(c);
+        for (ResearchPaper p : sorted) System.out.println(p.getCitation(CitationFormat.PLAIN_TEXT));
     }
 
     @Override
@@ -82,16 +90,9 @@ public class Teacher extends Employee implements Researcher {
         System.out.println(getFirstName() + " published: " + paper.getTitle());
     }
 
-    @Override
-    public void printProjectResearchPaper(ResearchPaper paper) {
-        System.out.println("Project paper: " + paper.getTitle());
-    }
-
     public TeacherPosition getPosition() { return position; }
 
     public void setPosition(TeacherPosition position) { this.position = position; }
-
-    public List<ResearchPaper> getPapers() { return papers; }
 
     public void setPapers(List<ResearchPaper> papers) { this.papers = papers; }
 }

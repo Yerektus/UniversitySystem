@@ -2,10 +2,20 @@ package model.research;
 
 import model.enums.CitationFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class ResearchPaper {
+public class ResearchPaper implements Comparable<ResearchPaper> {
+
+    public static final Comparator<ResearchPaper> BY_CITATIONS =
+            Comparator.comparingInt(ResearchPaper::getCitations).reversed();
+
+    public static final Comparator<ResearchPaper> BY_DATE =
+            Comparator.comparing(ResearchPaper::getDatePublished).reversed();
+
+    public static final Comparator<ResearchPaper> BY_LENGTH =
+            Comparator.comparingInt(ResearchPaper::getPages).reversed();
 
     private String title;
     private List<Researcher> authors;
@@ -36,6 +46,7 @@ public class ResearchPaper {
         }
     }
 
+    @Override
     public int compareTo(ResearchPaper other) {
         return Integer.compare(this.citations, other.citations);
     }
