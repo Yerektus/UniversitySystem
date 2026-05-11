@@ -3,6 +3,7 @@ package model.users;
 import model.enums.CitationFormat;
 import model.enums.GraduateType;
 import model.enums.Language;
+import model.exceptions.LowHIndexSupervisorException;
 import model.research.ResearchPaper;
 import model.research.Researcher;
 import java.util.ArrayList;
@@ -56,14 +57,21 @@ public class GraduateStudent extends Student implements Researcher {
         System.out.println(getFirstName() + " published: " + paper.getTitle());
     }
 
-    /** Diploma projects are the papers published by this graduate student. */
     public List<ResearchPaper> getDiplomaProjects() {
         return papers;
     }
 
     public Researcher getSupervisor() { return supervisor; }
 
-    public void setSupervisor(Researcher supervisor) { this.supervisor = supervisor; }
+    public void setSupervisor(Researcher supervisor) throws LowHIndexSupervisorException {
+        if (supervisor.calculateHindex() < 3) {
+            throw new LowHIndexSupervisorException(
+                "Supervisor h-index is " + supervisor.calculateHindex()
+                + ", minimum required is 3."
+            );
+        }
+        this.supervisor = supervisor;
+    }
 
     public GraduateType getGraduateType() { return graduateType; }
 

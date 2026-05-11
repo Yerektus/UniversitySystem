@@ -1,5 +1,7 @@
 package model.research;
 
+import model.exceptions.NotAResearcherException;
+import model.users.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,16 @@ public class ResearchProject {
     public void addParticipant(Researcher researcher) {
         participants.add(researcher);
         System.out.println("Participant added to project " + topic);
+    }
+
+    public void addParticipant(User user) throws NotAResearcherException {
+        if (!(user instanceof Researcher)) {
+            throw new NotAResearcherException(
+                user.getFirstName() + " " + user.getLastName()
+                + " is not a Researcher and cannot join the project."
+            );
+        }
+        addParticipant((Researcher) user);
     }
 
     public void addPaper(ResearchPaper paper) {

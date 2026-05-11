@@ -4,6 +4,7 @@ import model.academic.Course;
 import model.academic.Enrollment;
 import model.academic.StudentOrganization;
 import model.enums.Language;
+import model.exceptions.CreditLimitExceededException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +40,14 @@ public class Student extends User {
         this.organizations = new ArrayList<>();
     }
 
-    public void registerForCourse(Course course) {
-        if (totalCredits + course.getCredits() <= MAX_CREDITS) {
-            System.out.println(getFirstName() + " registered for " + course.getName());
-        } else {
-            System.out.println("Credit limit exceeded.");
+    public void registerForCourse(Course course) throws CreditLimitExceededException {
+        if (totalCredits + course.getCredits() > MAX_CREDITS) {
+            throw new CreditLimitExceededException(
+                "Cannot register for " + course.getName()
+                + ": would exceed the " + MAX_CREDITS + " credit limit."
+            );
         }
+        System.out.println(getFirstName() + " registered for " + course.getName());
     }
 
     public void dropCourse(Course course) {
