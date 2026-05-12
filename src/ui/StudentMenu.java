@@ -35,6 +35,7 @@ public class StudentMenu extends BaseMenu {
         System.out.println("9.  View student organizations");
         System.out.println("10. Join a student organization");
         System.out.println("11. View news");
+        System.out.println("12. Submit tech support request");
         System.out.println("0.  Logout");
     }
 
@@ -52,6 +53,7 @@ public class StudentMenu extends BaseMenu {
             case "9":  viewOrganizations(); break;
             case "10": joinOrganization(); break;
             case "11": viewNews(); break;
+            case "12": submitRequest(); break;
             case "0":  logout(); break;
             default:   System.out.println("Invalid choice.");
         }
@@ -305,5 +307,18 @@ public class StudentMenu extends BaseMenu {
         }
         System.out.println("=====================================");
         pause();
+    }
+
+    private void submitRequest() {
+        System.out.println("\n--- Submit Tech Support Request ---");
+        System.out.print("Topic (e.g. Fix projector, Fix printer): ");
+        String topic = scanner.nextLine().trim();
+        System.out.print("Description: ");
+        String description = scanner.nextLine().trim();
+
+        String id = "REQ" + System.currentTimeMillis();
+        model.communication.Request request = new model.communication.Request(id, topic, student, description);
+        storage.saveRequest(request);
+        System.out.println("Request submitted: " + topic);
     }
 }
