@@ -1,9 +1,12 @@
 package model.users;
 
 import model.enums.Language;
+import model.observer.JournalObserver;
+import model.research.Journal;
+import model.research.ResearchPaper;
 import java.io.Serializable;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, JournalObserver {
 
     private static final long serialVersionUID = 1L;
     private String id;
@@ -32,6 +35,12 @@ public abstract class User implements Serializable {
 
     public void sendMessage(String to, String text) {
         System.out.println("Message from " + firstName + " to " + to + ": " + text);
+    }
+
+    @Override
+    public void onPaperPublished(ResearchPaper paper, Journal journal) {
+        System.out.println("[Notification] " + firstName + ": New paper in '"
+                + journal.getName() + "' — " + paper.getTitle());
     }
 
     public String getId() { return id; }

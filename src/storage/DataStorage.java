@@ -11,6 +11,7 @@ import model.enums.*;
 import model.research.Journal;
 import model.research.ResearchPaper;
 import model.research.ResearchProject;
+import model.communication.News;
 import model.users.*;
 
 import java.io.*;
@@ -134,6 +135,47 @@ public class DataStorage {
     public void saveRequest(Request request)             { requests.add(request);     saveAll(); }
     public void saveMark(Mark mark)                      { marks.add(mark);           saveAll(); }
     public void saveResearchProject(ResearchProject p)   { researchProjects.add(p);   saveAll(); }
+
+    /**
+     * Publishes a paper to a journal, notifies subscribers (Observer),
+     * auto-creates a pinned Research news item, and updates top-cited researcher news.
+     */
+    public void publishPaperToJournal(ResearchPaper paper, Journal journal) {
+        News announcement = journal.publishPaper(paper);
+        if (announcement != null) {
+            announcement.setPinned(true);
+            newsList.add(announcement);
+        }
+        updateTopCitedResearcherNews();
+        saveAll();
+    }
+
+    private void updateTopCitedResearcherNews() {
+        model.research.Researcher topResearcher = null;
+        int maxCitations = 0;
+        for (User u : users.values()) {
+            if (u instanceof model.research.Researcher) {
+                model.research.Researcher r = (model.research.Researcher) u;
+                int total = r.getPapers().stream().mapToInt(model.research.ResearchPaper::getCitations).sum();
+                if (total > maxCitations) { maxCitations = total; topResearcher = r; }
+            }
+        }
+        if (topResearcher == null) return;
+        String name = topResearcher instanceof User
+                ? ((User) topResearcher).getFirstName() + " " + ((User) topResearcher).getLastName()
+                : "Unknown";
+
+        // Remove old top-cited news if exists
+        newsList.removeIf(n -> n.getTitle().startsWith("Top Cited Researcher"));
+
+        String newsId = "N_TOP" + System.currentTimeMillis();
+        News topNews = new News(newsId,
+                "Top Cited Researcher: " + name,
+                name + " is the top cited researcher with " + maxCitations + " total citations.",
+                "Research", null);
+        topNews.setPinned(true);
+        newsList.add(topNews);
+    }
 
     public void removeUser(String userId) {
         users.remove(userId);
