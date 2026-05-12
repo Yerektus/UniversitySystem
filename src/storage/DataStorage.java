@@ -10,6 +10,7 @@ import model.communication.Request;
 import model.enums.*;
 import model.research.Journal;
 import model.research.ResearchPaper;
+import model.research.ResearchProject;
 import model.users.*;
 
 import java.io.*;
@@ -28,6 +29,7 @@ public class DataStorage {
     private List<News> newsList;
     private List<Request> requests;
     private List<Mark> marks;
+    private List<ResearchProject> researchProjects;
 
     private DataStorage() {
         users = new HashMap<>();
@@ -38,6 +40,7 @@ public class DataStorage {
         newsList = new ArrayList<>();
         requests = new ArrayList<>();
         marks = new ArrayList<>();
+        researchProjects = new ArrayList<>();
 
         new File(DATA_PATH).mkdirs();
 
@@ -76,14 +79,15 @@ public class DataStorage {
 
     @SuppressWarnings("unchecked")
     public boolean load() {
-        Object u = deserialize("users");
-        Object c = deserialize("courses");
-        Object j = deserialize("journals");
+        Object u  = deserialize("users");
+        Object c  = deserialize("courses");
+        Object j  = deserialize("journals");
         Object lg = deserialize("lessonGroups");
-        Object o = deserialize("organizations");
-        Object n = deserialize("news");
-        Object r = deserialize("requests");
-        Object m = deserialize("marks");
+        Object o  = deserialize("organizations");
+        Object n  = deserialize("news");
+        Object r  = deserialize("requests");
+        Object m  = deserialize("marks");
+        Object rp = deserialize("researchProjects");
 
         if (u == null) return false;
 
@@ -95,6 +99,7 @@ public class DataStorage {
         newsList      = (List<News>)                 n;
         requests      = (List<Request>)              r;
         marks         = (List<Mark>)                 m;
+        researchProjects = rp != null ? (List<ResearchProject>) rp : new ArrayList<>();
         return true;
     }
 
@@ -104,9 +109,10 @@ public class DataStorage {
         serialize(journals,      "journals");
         serialize(lessonGroups,  "lessonGroups");
         serialize(organizations, "organizations");
-        serialize(newsList,      "news");
-        serialize(requests,      "requests");
-        serialize(marks,         "marks");
+        serialize(newsList,         "news");
+        serialize(requests,         "requests");
+        serialize(marks,            "marks");
+        serialize(researchProjects, "researchProjects");
     }
 
     // ── CRUD ─────────────────────────────────────────────────────────────────
@@ -127,6 +133,7 @@ public class DataStorage {
     public void saveNews(News news)                      { newsList.add(news);        saveAll(); }
     public void saveRequest(Request request)             { requests.add(request);     saveAll(); }
     public void saveMark(Mark mark)                      { marks.add(mark);           saveAll(); }
+    public void saveResearchProject(ResearchProject p)   { researchProjects.add(p);   saveAll(); }
 
     public void removeUser(String userId) {
         users.remove(userId);
@@ -152,6 +159,7 @@ public class DataStorage {
     public List<News>                  getNewsList()      { return newsList; }
     public List<Request>               getRequests()      { return requests; }
     public List<Mark>                  getMarks()         { return marks; }
+    public List<ResearchProject>       getResearchProjects() { return researchProjects; }
 
     // ── Seed data (first run only) ────────────────────────────────────────────
 
