@@ -3,13 +3,11 @@ package ui;
 import model.communication.Request;
 import model.enums.RequestStatus;
 import model.users.TechSupportSpecialist;
-import model.users.User;
 import storage.DataStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class TechSupportMenu extends BaseMenu {
 

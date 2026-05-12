@@ -1,12 +1,10 @@
 package ui;
 
 import model.exceptions.LowHIndexSupervisorException;
-import model.exceptions.NotAResearcherException;
 import model.research.ResearchPaper;
 import model.research.ResearchProject;
 import model.research.Researcher;
 import model.users.GraduateStudent;
-import model.users.Teacher;
 import model.users.User;
 import storage.DataStorage;
 
@@ -188,12 +186,8 @@ public class GraduateStudentMenu extends StudentMenu {
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
         if (idx < 0 || idx >= projects.size()) return;
 
-        try {
-            projects.get(idx).addParticipant(gradStudent);
-            storage.updateAndSave();
-        } catch (NotAResearcherException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        projects.get(idx).addParticipant((Researcher) gradStudent);
+        storage.updateAndSave();
     }
 
     private void createProject() {
@@ -201,9 +195,8 @@ public class GraduateStudentMenu extends StudentMenu {
         String topic = scanner.nextLine().trim();
         String id = "PROJ" + System.currentTimeMillis();
         ResearchProject project = new ResearchProject(id, topic);
-        project.addParticipant(gradStudent);
+        project.addParticipant((Researcher) gradStudent);
         storage.saveResearchProject(project);
         System.out.println("Project created: " + topic);
     }
 }
-

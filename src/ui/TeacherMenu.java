@@ -8,7 +8,6 @@ import model.communication.Message;
 import model.enums.TeacherPosition;
 import model.enums.UrgencyLevel;
 import model.research.ResearchPaper;
-import model.research.ResearchProject;
 import model.users.Employee;
 import model.users.Student;
 import model.users.Teacher;
