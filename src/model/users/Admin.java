@@ -1,7 +1,9 @@
 package model.users;
+
 import model.communication.Request;
 import model.enums.Language;
 import model.enums.RequestStatus;
+
 public class Admin extends Employee {
 
     public Admin(String id, String password, String firstName, String lastName,
