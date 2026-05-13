@@ -58,7 +58,6 @@ public class GraduateStudentMenu extends StudentMenu {
         }
     }
 
-    // ── 13. View / set supervisor ─────────────────────────────────────────────
 
     private void viewSetSupervisor() {
         System.out.println("\n--- Supervisor ---");
@@ -78,7 +77,6 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.print("Choice: ");
         if (!scanner.nextLine().trim().equalsIgnoreCase("y")) return;
 
-        // Collect all Researchers from users (Teachers who are Researchers)
         List<Researcher> researchers = new ArrayList<>();
         for (User u : storage.getUsers().values())
             if (u instanceof Researcher) researchers.add((Researcher) u);
@@ -112,7 +110,6 @@ public class GraduateStudentMenu extends StudentMenu {
         }
     }
 
-    // ── 14. Publish research paper ────────────────────────────────────────────
 
     private void publishPaper() {
         System.out.println("\n--- Publish Research Paper ---");
@@ -132,12 +129,11 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.println("Paper published and added to your diploma projects.");
     }
 
-    // ── 15. View my papers ────────────────────────────────────────────────────
 
     private void viewPapers() {
         if (gradStudent.getPapers().isEmpty()) {
             System.out.println("No papers published yet.");
-            pause();
+
             return;
         }
         System.out.println("H-index: " + gradStudent.calculateHindex());
@@ -148,14 +144,11 @@ public class GraduateStudentMenu extends StudentMenu {
             case "3": gradStudent.printPapers(ResearchPaper.BY_LENGTH);    break;
             default:  gradStudent.printPapers(ResearchPaper.BY_DATE);      break;
         }
-        pause();
+
     }
 
-    // ── 16. View / join research projects ────────────────────────────────────
 
     private void researchProjects() {
-        // Research projects are stored inside DataStorage — we need to surface them
-        // For now collect from all courses (future: dedicated list in DataStorage)
         System.out.println("\n--- Research Projects ---");
         System.out.println("1. View available projects");
         System.out.println("2. Create new project");
@@ -171,7 +164,7 @@ public class GraduateStudentMenu extends StudentMenu {
         List<ResearchProject> projects = storage.getResearchProjects();
         if (projects.isEmpty()) {
             System.out.println("No research projects available.");
-            pause();
+
             return;
         }
 

@@ -43,7 +43,6 @@ public class TechSupportMenu extends BaseMenu {
         }
     }
 
-    // ── 1. View new requests ──────────────────────────────────────────────────
 
     private void viewNewRequests() {
         List<Request> newRequests = new ArrayList<>();
@@ -52,7 +51,7 @@ public class TechSupportMenu extends BaseMenu {
 
         if (newRequests.isEmpty()) {
             System.out.println("No new requests.");
-            pause();
+
             return;
         }
 
@@ -62,16 +61,15 @@ public class TechSupportMenu extends BaseMenu {
             printRequest(r);
         }
         storage.updateAndSave();
-        pause();
+
     }
 
-    // ── 2. View all requests ──────────────────────────────────────────────────
 
     private void viewAllRequests() {
         List<Request> all = storage.getRequests();
         if (all.isEmpty()) {
             System.out.println("No requests found.");
-            pause();
+
             return;
         }
 
@@ -97,10 +95,9 @@ public class TechSupportMenu extends BaseMenu {
             }
         }
         if (count == 0) System.out.println("No requests with that status.");
-        pause();
+
     }
 
-    // ── 3. Process a request ──────────────────────────────────────────────────
 
     private void processRequest() {
         List<Request> actionable = new ArrayList<>();
@@ -152,7 +149,6 @@ public class TechSupportMenu extends BaseMenu {
         storage.updateAndSave();
     }
 
-    // ── 4. Submit a request ───────────────────────────────────────────────────
 
     private void submitRequest() {
         System.out.println("\n--- Submit Tech Support Request ---");
@@ -167,10 +163,8 @@ public class TechSupportMenu extends BaseMenu {
         System.out.println("Request submitted: " + topic);
     }
 
-    // ── Helper ────────────────────────────────────────────────────────────────
 
     private void printRequest(Request r) {
-        System.out.println("--------------------------------------------------");
         System.out.println("ID     : " + r.getRequestId());
         System.out.println("Topic  : " + r.getTopic());
         System.out.println("From   : " + r.getSender().getFirstName()
@@ -180,4 +174,3 @@ public class TechSupportMenu extends BaseMenu {
         System.out.println("Date   : " + r.getCreatedAt());
     }
 }
-

@@ -57,6 +57,7 @@ public class DataStorage {
         return instance;
     }
 
+
     public static void serialize(Object obj, String fileName) {
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(DATA_PATH + "/" + fileName + ".txt"))) {
@@ -113,6 +114,7 @@ public class DataStorage {
         serialize(researchProjects, "researchProjects");
     }
 
+
     public void save(Object object) {
         if (object instanceof User) {
             users.put(((User) object).getId(), (User) object);
@@ -131,6 +133,7 @@ public class DataStorage {
     public void saveMark(Mark mark)                      { marks.add(mark);           saveAll(); }
     public void saveResearchProject(ResearchProject p)   { researchProjects.add(p);   saveAll(); }
 
+    
     public void publishPaperToJournal(ResearchPaper paper, Journal journal) {
         News announcement = journal.publishPaper(paper);
         if (announcement != null) {
@@ -181,6 +184,7 @@ public class DataStorage {
         return result;
     }
 
+
     public Map<String, User>           getUsers()         { return users; }
     public List<Course>                getCourses()       { return courses; }
     public List<Journal>               getJournals()      { return journals; }
@@ -191,46 +195,47 @@ public class DataStorage {
     public List<Mark>                  getMarks()         { return marks; }
     public List<ResearchProject>       getResearchProjects() { return researchProjects; }
 
+
     private void seedData() {
         Admin admin = new Admin(
                 "admin001", "admin123", "Aibek", "Seitkali",
-                "admin@university.kz", Language.EN, "IT Department");
+                "a_seitkali@kbtu.kz", Language.EN, "IT Department");
 
         Student student = new Student(
                 "student001", "student123", "Daniyar", "Bekov",
-                "student@university.kz", Language.KZ, "Computer Science", 2);
+                "d_bekov@kbtu.kz", Language.KZ, "Computer Science", 2);
         student.setGpa(3.5);
         student.setTotalCredits(10);
 
         Student student2 = new Student(
                 "student002", "pass123", "Aliya", "Ospanova",
-                "aliya@university.kz", Language.KZ, "Information Systems", 1);
+                "a_ospanova@kbtu.kz", Language.KZ, "Information Systems", 1);
         student2.setGpa(3.8);
         student2.setTotalCredits(5);
 
         GraduateStudent gradStudent = new GraduateStudent(
                 "grad001", "grad123", "Madina", "Nurova",
-                "grad@university.kz", Language.RU, "Data Science", 1,
+                "m_nurova@kbtu.kz", Language.RU, "Data Science", 1,
                 GraduateType.MASTER, "AI Research");
 
         Teacher teacher = new Teacher(
                 "teacher001", "teacher123", "Olga", "Ivanova",
-                "teacher@university.kz", Language.RU, "CS Department",
+                "o_ivanova@kbtu.kz", Language.RU, "CS Department",
                 TeacherPosition.PROFESSOR);
 
         Teacher teacher2 = new Teacher(
                 "teacher002", "pass123", "Bekzat", "Akhanov",
-                "bekzat@university.kz", Language.KZ, "Math Department",
+                "b_akhanov@kbtu.kz", Language.KZ, "Math Department",
                 TeacherPosition.LECTOR);
 
         Manager manager = new Manager(
                 "manager001", "manager123", "Nursultan", "Akhmetov",
-                "manager@university.kz", Language.KZ, "Registration Office",
+                "n_akhmetov@kbtu.kz", Language.KZ, "Registration Office",
                 ManagerType.OR);
 
         TechSupportSpecialist techSupport = new TechSupportSpecialist(
                 "tech001", "tech123", "Arman", "Zhukov",
-                "tech@university.kz", Language.EN, "Support Department");
+                "a_zhukov@kbtu.kz", Language.EN, "Support Department");
 
         users.put(admin.getId(), admin);
         users.put(student.getId(), student);

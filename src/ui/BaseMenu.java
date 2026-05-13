@@ -46,9 +46,4 @@ public abstract class BaseMenu {
         try { return Double.parseDouble(input); }
         catch (NumberFormatException e) { return defaultVal; }
     }
-
-    protected void pause() {
-        System.out.print("\nPress Enter to continue...");
-        scanner.nextLine();
-    }
 }
