@@ -2,10 +2,9 @@ package ui;
 
 import model.communication.News;
 import model.communication.Request;
-import model.enums.Language;
-import model.enums.ManagerType;
-import model.enums.RequestStatus;
+import model.enums.*;
 import model.users.*;
+import storage.ActionLogger;
 import storage.DataStorage;
 
 import java.util.ArrayList;
@@ -33,7 +32,8 @@ public class AdminMenu extends BaseMenu {
         System.out.println("6. Accept a request");
         System.out.println("7. Reject a request");
         System.out.println("8. View all news");
-        System.out.println("9. View system stats");
+        System.out.println("9. View action logs");
+        System.out.println("10. View system stats");
         System.out.println("0. Logout");
     }
 
@@ -47,9 +47,10 @@ public class AdminMenu extends BaseMenu {
             case "5": viewRequests(); break;
             case "6": acceptRequest(); break;
             case "7": rejectRequest(); break;
-            case "8": viewAllNews(); break;
-            case "9": viewLogs(); break;
-            case "0": logout(); break;
+            case "8": viewAllNews();  break;
+            case "9": viewLogs();     break;
+            case "10": viewStats();   break;
+            case "0": logout();       break;
             default: System.out.println("Invalid choice.");
         }
     }
@@ -87,7 +88,13 @@ public class AdminMenu extends BaseMenu {
 
     private void addUser() {
         System.out.println("\n--- Add User ---");
-        System.out.println("Role: 1. Manager  2. Admin  3. TechSupportSpecialist");
+        System.out.println("Role:");
+        System.out.println("1. Student");
+        System.out.println("2. Graduate Student");
+        System.out.println("3. Teacher");
+        System.out.println("4. Manager");
+        System.out.println("5. Admin");
+        System.out.println("6. Tech Support Specialist");
         System.out.print("Enter choice: ");
         String roleChoice = scanner.nextLine().trim();
 
@@ -99,32 +106,64 @@ public class AdminMenu extends BaseMenu {
         String email = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
-        System.out.print("Department: ");
+        System.out.print("Department/Faculty: ");
         String department = scanner.nextLine().trim();
+        System.out.println("Language: 1. KZ  2. EN  3. RU");
+        System.out.print("Enter choice: ");
+        Language language = parseLanguage(scanner.nextLine().trim());
 
         String id = "U" + System.currentTimeMillis();
         User newUser = null;
 
         switch (roleChoice) {
-            case "1":
+            case "1": {
+                System.out.print("Major: ");
+                String major = scanner.nextLine().trim();
+                System.out.print("Year (1-4): ");
+                int year = parseIntSafe(scanner.nextLine().trim(), 1);
+                newUser = new Student(id, password, firstName, lastName, email, language, major, year);
+                break;
+            }
+            case "2": {
+                System.out.print("Major: ");
+                String major = scanner.nextLine().trim();
+                System.out.print("Year (1-2): ");
+                int year = parseIntSafe(scanner.nextLine().trim(), 1);
+                System.out.println("Type: 1. MASTER  2. PHD");
+                GraduateType gt = scanner.nextLine().trim().equals("2") ? GraduateType.PHD : GraduateType.MASTER;
+                System.out.print("Research target/topic: ");
+                String target = scanner.nextLine().trim();
+                newUser = new GraduateStudent(id, password, firstName, lastName, email, language, major, year, gt, target);
+                break;
+            }
+            case "3": {
+                System.out.println("Position: 1. TUTOR  2. LECTOR  3. SENIOR  4. PROFESSOR");
+                TeacherPosition pos;
+                switch (scanner.nextLine().trim()) {
+                    case "1": pos = TeacherPosition.TUTOR;     break;
+                    case "3": pos = TeacherPosition.SENIOR;    break;
+                    case "4": pos = TeacherPosition.PROFESSOR; break;
+                    default:  pos = TeacherPosition.LECTOR;    break;
+                }
+                newUser = new Teacher(id, password, firstName, lastName, email, language, department, pos);
+                break;
+            }
+            case "4": {
                 System.out.println("Manager type: 1. OR  2. DEPARTMENT  3. DEAN_OFFICE");
-                System.out.print("Enter choice: ");
                 ManagerType mType;
                 switch (scanner.nextLine().trim()) {
-                    case "2": mType = ManagerType.DEPARTMENT; break;
+                    case "2": mType = ManagerType.DEPARTMENT;  break;
                     case "3": mType = ManagerType.DEAN_OFFICE; break;
                     default:  mType = ManagerType.OR;
                 }
-                newUser = new Manager(id, password, firstName, lastName,
-                        email, Language.EN, department, mType);
+                newUser = new Manager(id, password, firstName, lastName, email, language, department, mType);
                 break;
-            case "2":
-                newUser = new Admin(id, password, firstName, lastName,
-                        email, Language.EN, department);
+            }
+            case "5":
+                newUser = new Admin(id, password, firstName, lastName, email, language, department);
                 break;
-            case "3":
-                newUser = new TechSupportSpecialist(id, password, firstName, lastName,
-                        email, Language.EN, department);
+            case "6":
+                newUser = new TechSupportSpecialist(id, password, firstName, lastName, email, language, department);
                 break;
             default:
                 System.out.println("Invalid role.");
@@ -133,7 +172,8 @@ public class AdminMenu extends BaseMenu {
 
         admin.addUser(newUser);
         storage.save(newUser);
-        System.out.println("User added successfully!");
+        ActionLogger.getInstance().log(admin.getId(), "ADD_USER via AdminMenu: " + email);
+        System.out.println("Account created. Email: " + email + " | Password: " + password);
         pause();
     }
 
@@ -243,8 +283,10 @@ public class AdminMenu extends BaseMenu {
                 News n = newsList.get(i);
                 System.out.println("\n  " + (i + 1) + ". [" + n.getTopic() + "] " + n.getTitle());
                 System.out.println("     " + n.getContent());
-                System.out.println("     Posted by: " + n.getAuthor().getFirstName()
-                        + " " + n.getAuthor().getLastName()
+                System.out.println("     Posted by: "
+                        + (n.getAuthor() != null
+                            ? n.getAuthor().getFirstName() + " " + n.getAuthor().getLastName()
+                            : "System")
                         + "  |  Pinned: " + n.isPinned());
             }
         }
@@ -253,6 +295,13 @@ public class AdminMenu extends BaseMenu {
     }
 
     private void viewLogs() {
+        System.out.println("\n========== Action Logs ==========");
+        System.out.println(admin.viewLogs());
+        System.out.println("=================================");
+        pause();
+    }
+
+    private void viewStats() {
         long studentCount = storage.getUsers().values().stream()
                 .filter(u -> u instanceof Student).count();
         long teacherCount = storage.getUsers().values().stream()
@@ -271,7 +320,13 @@ public class AdminMenu extends BaseMenu {
         System.out.printf("  %-25s %d%n", "Journals:",          storage.getJournals().size());
         System.out.printf("  %-25s %d%n", "Requests:",          storage.getRequests().size());
         System.out.printf("  %-25s %d%n", "News Articles:",     storage.getNewsList().size());
-        System.out.println("========================================");
-        pause();
+    }
+    
+    private Language parseLanguage(String choice) {
+        switch (choice) {
+            case "1": return Language.KZ;
+            case "3": return Language.RU;
+            default:  return Language.EN;
+        }
     }
 }

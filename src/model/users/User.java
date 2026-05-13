@@ -27,10 +27,12 @@ public abstract class User implements Serializable, JournalObserver {
 
     public void login() {
         System.out.println(firstName + " logged in.");
+        storage.ActionLogger.getInstance().log(id, "LOGIN");
     }
 
     public void logout() {
         System.out.println(firstName + " logged out.");
+        storage.ActionLogger.getInstance().log(id, "LOGOUT");
     }
 
     public void sendMessage(String to, String text) {
