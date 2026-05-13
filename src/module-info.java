@@ -1,8 +1,2 @@
-/**
- * 
- */
-/**
- * 
- */
 module UniversitySystem {
 }

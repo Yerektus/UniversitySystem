@@ -4,6 +4,8 @@ import model.academic.Course;
 import model.academic.Mark;
 import model.communication.News;
 import model.enums.*;
+import model.research.ResearchPaper;
+import model.research.Researcher;
 import model.users.*;
 import storage.DataStorage;
 
@@ -30,6 +32,7 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("7.  View students");
         System.out.println("8.  View teachers");
         System.out.println("9.  Academic performance report");
+        System.out.println("10. Print all researchers' papers");
         System.out.println("0.  Logout");
     }
 
@@ -45,12 +48,11 @@ public class ManagerMenu extends BaseMenu {
             case "7": viewStudents();           break;
             case "8": viewTeachers();           break;
             case "9": academicReport();         break;
+            case "10": printAllResearchPapers(); break;
             case "0": logout();                 break;
             default:  System.out.println("Invalid choice.");
         }
     }
-
-    // ── 1. View profile ───────────────────────────────────────────────────────
 
     private void viewProfile() {
         System.out.println("\n--- Profile ---");
@@ -61,8 +63,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("Language: " + manager.getLanguage());
         pause();
     }
-
-    // ── 2. Create new user account ────────────────────────────────────────────
 
     private void createUserAccount() {
         System.out.println("\n--- Create User Account ---");
@@ -138,8 +138,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("Account created. Email: " + email + " | Password: " + password);
     }
 
-    // ── 3. Assign course to teacher ───────────────────────────────────────────
-
     private void assignCourseToTeacher() {
         List<Course> courses = storage.getCourses();
         List<Teacher> teachers = getTeachers();
@@ -180,8 +178,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("Assigned " + teacher.getFirstName() + " to " + course.getName());
     }
 
-    // ── 4. Approve student registration ──────────────────────────────────────
-
     private void approveRegistration() {
         List<Student> students = getStudents();
         List<Course> courses = storage.getCourses();
@@ -219,8 +215,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("Approved " + student.getFirstName() + " for " + course.getName());
     }
 
-    // ── 5. Add course for registration ────────────────────────────────────────
-
     private void addCourseForRegistration() {
         System.out.println("\n--- Add Course for Registration ---");
         System.out.print("Course ID: ");
@@ -248,8 +242,6 @@ public class ManagerMenu extends BaseMenu {
         storage.save(course);
         System.out.println("Course '" + name + "' added for registration.");
     }
-
-    // ── 6. Manage news ────────────────────────────────────────────────────────
 
     private void manageNews() {
         System.out.println("\n--- News Management ---");
@@ -308,8 +300,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("Deleted: " + removed);
     }
 
-    // ── 7. View students ──────────────────────────────────────────────────────
-
     private void viewStudents() {
         System.out.println("Sort by: 1. GPA (desc)  2. Name (A-Z)");
         System.out.print("Choice: ");
@@ -332,8 +322,6 @@ public class ManagerMenu extends BaseMenu {
         pause();
     }
 
-    // ── 8. View teachers ──────────────────────────────────────────────────────
-
     private void viewTeachers() {
         List<Teacher> teachers = getTeachers();
         if (teachers.isEmpty()) { System.out.println("No teachers."); pause(); return; }
@@ -347,8 +335,6 @@ public class ManagerMenu extends BaseMenu {
                     t.getFirstName(), t.getLastName(), t.getDepartment(), t.getPosition());
         pause();
     }
-
-    // ── 9. Academic performance report ───────────────────────────────────────
 
     private void academicReport() {
         List<Mark> marks = storage.getMarks();
@@ -368,7 +354,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.printf ("Average total mark   : %.2f%n", avg);
         System.out.printf ("Pass rate            : %.1f%%%n", (passed * 100.0 / marks.size()));
 
-        // Per-course breakdown
         Map<String, List<Mark>> byCourse = new LinkedHashMap<>();
         for (Mark m : marks)
             byCourse.computeIfAbsent(m.getCourse().getName(), k -> new ArrayList<>()).add(m);
@@ -384,8 +369,6 @@ public class ManagerMenu extends BaseMenu {
         }
         pause();
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private List<Student> getStudents() {
         List<Student> list = new ArrayList<>();
@@ -408,5 +391,30 @@ public class ManagerMenu extends BaseMenu {
             default:  return Language.EN;
         }
     }
-}
 
+    private void printAllResearchPapers() {
+        System.out.println("Sort by: 1. Citations  2. Date  3. Length");
+        System.out.print("Choice: ");
+        String sort = scanner.nextLine().trim();
+
+        java.util.Comparator<ResearchPaper> comparator;
+        switch (sort) {
+            case "1": comparator = ResearchPaper.BY_CITATIONS; break;
+            case "3": comparator = ResearchPaper.BY_LENGTH;    break;
+            default:  comparator = ResearchPaper.BY_DATE;      break;
+        }
+
+        List<ResearchPaper> allPapers = new ArrayList<>();
+        for (User u : storage.getUsers().values())
+            if (u instanceof Researcher)
+                allPapers.addAll(((Researcher) u).getPapers());
+
+        if (allPapers.isEmpty()) { System.out.println("No research papers found."); pause(); return; }
+
+        allPapers.sort(comparator);
+        System.out.println("\n--- All Research Papers (" + allPapers.size() + ") ---");
+        for (ResearchPaper p : allPapers)
+            System.out.println(p.getCitation(model.enums.CitationFormat.PLAIN_TEXT));
+        pause();
+    }
+}

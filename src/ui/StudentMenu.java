@@ -36,6 +36,8 @@ public class StudentMenu extends BaseMenu {
         System.out.println("10. Join a student organization");
         System.out.println("11. View news");
         System.out.println("12. Submit tech support request");
+        System.out.println("13. Rate a teacher");
+        System.out.println("14. Add comment to news");
         System.out.println("0.  Logout");
     }
 
@@ -54,6 +56,8 @@ public class StudentMenu extends BaseMenu {
             case "10": joinOrganization(); break;
             case "11": viewNews(); break;
             case "12": submitRequest(); break;
+            case "13": rateTeacher(); break;
+            case "14": addCommentToNews(); break;
             case "0":  logout(); break;
             default:   System.out.println("Invalid choice.");
         }
@@ -300,8 +304,15 @@ public class StudentMenu extends BaseMenu {
             for (News n : storage.getNewsList()) {
                 System.out.println("\n  [" + n.getTopic() + "] " + n.getTitle());
                 System.out.println("  " + n.getContent());
-                System.out.println("  Posted by: " + n.getAuthor().getFirstName()
-                        + " " + n.getAuthor().getLastName());
+                System.out.println("  Posted by: "
+                        + (n.getAuthor() != null
+                            ? n.getAuthor().getFirstName() + " " + n.getAuthor().getLastName()
+                            : "System")
+                        + (n.isPinned() ? " [PINNED]" : ""));
+                if (!n.getComments().isEmpty()) {
+                    System.out.println("  Comments:");
+                    for (String c : n.getComments()) System.out.println("    > " + c);
+                }
                 System.out.println("  ---");
             }
         }
@@ -320,5 +331,50 @@ public class StudentMenu extends BaseMenu {
         model.communication.Request request = new model.communication.Request(id, topic, student, description);
         storage.saveRequest(request);
         System.out.println("Request submitted: " + topic);
+    }
+
+    private void rateTeacher() {
+        List<model.users.Teacher> teachers = new java.util.ArrayList<>();
+        for (model.users.User u : storage.getUsers().values())
+            if (u instanceof model.users.Teacher) teachers.add((model.users.Teacher) u);
+
+        if (teachers.isEmpty()) { System.out.println("No teachers found."); return; }
+
+        System.out.println("\n--- Rate a Teacher ---");
+        for (int i = 0; i < teachers.size(); i++)
+            System.out.println((i + 1) + ". " + teachers.get(i).getFirstName()
+                    + " " + teachers.get(i).getLastName()
+                    + " [" + teachers.get(i).getPosition() + "]");
+        System.out.print("Select teacher (0 to cancel): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+        if (idx < 0 || idx >= teachers.size()) { System.out.println("Cancelled."); return; }
+
+        System.out.print("Rating (1-5): ");
+        int rating = parseIntSafe(scanner.nextLine().trim(), 0);
+        if (rating < 1 || rating > 5) { System.out.println("Invalid rating. Must be 1-5."); return; }
+
+        student.rateTeacher(teachers.get(idx), rating);
+        storage.updateAndSave();
+    }
+
+    private void addCommentToNews() {
+        List<model.communication.News> newsList = storage.getNewsList();
+        if (newsList.isEmpty()) { System.out.println("No news available."); return; }
+
+        System.out.println("\n--- Add Comment to News ---");
+        for (int i = 0; i < newsList.size(); i++)
+            System.out.println((i + 1) + ". [" + newsList.get(i).getTopic() + "] "
+                    + newsList.get(i).getTitle());
+        System.out.print("Select news (0 to cancel): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+        if (idx < 0 || idx >= newsList.size()) { System.out.println("Cancelled."); return; }
+
+        System.out.print("Your comment: ");
+        String comment = scanner.nextLine().trim();
+        if (comment.isEmpty()) { System.out.println("Comment cannot be empty."); return; }
+
+        newsList.get(idx).getComments().add(student.getFirstName() + " " + student.getLastName() + ": " + comment);
+        storage.updateAndSave();
+        System.out.println("Comment added.");
     }
 }

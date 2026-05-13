@@ -11,7 +11,6 @@ import model.enums.*;
 import model.research.Journal;
 import model.research.ResearchPaper;
 import model.research.ResearchProject;
-import model.communication.News;
 import model.users.*;
 
 import java.io.*;
@@ -57,8 +56,6 @@ public class DataStorage {
         }
         return instance;
     }
-
-    // ── Serialization ────────────────────────────────────────────────────────
 
     public static void serialize(Object obj, String fileName) {
         try (ObjectOutputStream oos = new ObjectOutputStream(
@@ -116,8 +113,6 @@ public class DataStorage {
         serialize(researchProjects, "researchProjects");
     }
 
-    // ── CRUD ─────────────────────────────────────────────────────────────────
-
     public void save(Object object) {
         if (object instanceof User) {
             users.put(((User) object).getId(), (User) object);
@@ -136,10 +131,6 @@ public class DataStorage {
     public void saveMark(Mark mark)                      { marks.add(mark);           saveAll(); }
     public void saveResearchProject(ResearchProject p)   { researchProjects.add(p);   saveAll(); }
 
-    /**
-     * Publishes a paper to a journal, notifies subscribers (Observer),
-     * auto-creates a pinned Research news item, and updates top-cited researcher news.
-     */
     public void publishPaperToJournal(ResearchPaper paper, Journal journal) {
         News announcement = journal.publishPaper(paper);
         if (announcement != null) {
@@ -165,7 +156,6 @@ public class DataStorage {
                 ? ((User) topResearcher).getFirstName() + " " + ((User) topResearcher).getLastName()
                 : "Unknown";
 
-        // Remove old top-cited news if exists
         newsList.removeIf(n -> n.getTitle().startsWith("Top Cited Researcher"));
 
         String newsId = "N_TOP" + System.currentTimeMillis();
@@ -191,8 +181,6 @@ public class DataStorage {
         return result;
     }
 
-    // ── Getters ───────────────────────────────────────────────────────────────
-
     public Map<String, User>           getUsers()         { return users; }
     public List<Course>                getCourses()       { return courses; }
     public List<Journal>               getJournals()      { return journals; }
@@ -202,8 +190,6 @@ public class DataStorage {
     public List<Request>               getRequests()      { return requests; }
     public List<Mark>                  getMarks()         { return marks; }
     public List<ResearchProject>       getResearchProjects() { return researchProjects; }
-
-    // ── Seed data (first run only) ────────────────────────────────────────────
 
     private void seedData() {
         Admin admin = new Admin(
