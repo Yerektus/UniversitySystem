@@ -2,6 +2,7 @@ package model.users;
 
 import model.academic.Course;
 import model.academic.Enrollment;
+import model.academic.LessonGroup;
 import model.academic.StudentOrganization;
 import model.enums.Language;
 import model.exceptions.CreditLimitExceededException;
@@ -33,13 +34,19 @@ public class Student extends User {
         this.organizations = new ArrayList<>();
     }
 
-    public void registerForCourse(Course course) throws CreditLimitExceededException {
+    public void registerForCourse(Course course, LessonGroup group) throws CreditLimitExceededException {
         if (totalCredits + course.getCredits() > MAX_CREDITS) {
             throw new CreditLimitExceededException(
                 "Cannot register for " + course.getName()
                 + ": would exceed the " + MAX_CREDITS + " credit limit."
             );
         }
+        String enrollId = "E" + System.currentTimeMillis();
+        Enrollment enrollment = new Enrollment(enrollId, this, course, group);
+        enrollments.add(enrollment);
+        if (!course.getEnrolledStudents().contains(this))
+            course.getEnrolledStudents().add(this);
+        totalCredits += course.getCredits();
         System.out.println(getFirstName() + " registered for " + course.getName());
     }
 

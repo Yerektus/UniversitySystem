@@ -8,7 +8,6 @@ import model.communication.News;
 import model.users.Student;
 import model.users.Teacher;
 import storage.DataStorage;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -36,6 +35,8 @@ public class StudentMenu extends BaseMenu {
         System.out.println("10. Join a student organization");
         System.out.println("11. View news");
         System.out.println("12. Submit tech support request");
+        System.out.println("13. Rate a teacher");
+        System.out.println("14. Add comment to news");
         System.out.println("0.  Logout");
     }
 
@@ -54,13 +55,15 @@ public class StudentMenu extends BaseMenu {
             case "10": joinOrganization(); break;
             case "11": viewNews(); break;
             case "12": submitRequest(); break;
+            case "13": rateTeacher(); break;
+            case "14": addCommentToNews(); break;
             case "0":  logout(); break;
             default:   System.out.println("Invalid choice.");
         }
     }
 
     protected void viewProfile() {
-        System.out.println("\n========== My Profile ==========");
+        System.out.println("\n--- My Profile ---");
         System.out.printf("%-12s %s%n", "ID:",        student.getId());
         System.out.printf("%-12s %s %s%n", "Name:",   student.getFirstName(), student.getLastName());
         System.out.printf("%-12s %s%n", "Email:",     student.getEmail());
@@ -70,19 +73,17 @@ public class StudentMenu extends BaseMenu {
         System.out.printf("%-12s %d / %d%n", "Credits:", student.getTotalCredits(), Student.MAX_CREDITS);
         System.out.printf("%-12s %d%n", "Fail Count:", student.getFailCount());
         System.out.printf("%-12s %s%n", "Language:",  student.getLanguage());
-        System.out.println("=================================");
-        pause();
+
     }
 
     private void viewAvailableCourses() {
         List<Course> courses = storage.getCourses();
-        System.out.println("\n========== Available Courses ==========");
+        System.out.println("\n--- Available Courses ---");
         if (courses.isEmpty()) {
             System.out.println("  No courses available.");
         } else {
             System.out.printf("%-6s %-35s %-8s %-15s %-10s %-20s%n",
                     "No.", "Name", "Credits", "Type", "Year", "Major");
-            System.out.println("-------------------------------------------------------------------------------------------------------");
             for (int i = 0; i < courses.size(); i++) {
                 Course c = courses.get(i);
                 System.out.printf("%-6d %-35s %-8d %-15s %-10d %-20s%n",
@@ -90,8 +91,7 @@ public class StudentMenu extends BaseMenu {
                         c.getTargetYear(), c.getTargetMajor());
             }
         }
-        System.out.println("=======================================");
-        pause();
+
     }
 
     private void registerForCourse() {
@@ -106,15 +106,38 @@ public class StudentMenu extends BaseMenu {
         System.out.print("Select course number (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
         if (idx < 0 || idx >= courses.size()) { System.out.println("Cancelled."); return; }
-
         Course selected = courses.get(idx);
-        System.out.println("Registering for: " + selected.getName());
+
+        List<model.academic.LessonGroup> groups = new java.util.ArrayList<>();
+        for (model.academic.LessonGroup g : storage.getLessonGroups())
+            if (g.getCourse().getCourseId().equals(selected.getCourseId())) groups.add(g);
+
+        model.academic.LessonGroup chosenGroup = null;
+        if (groups.isEmpty()) {
+            System.out.println("No lesson groups available for this course.");
+            return;
+        } else if (groups.size() == 1) {
+            chosenGroup = groups.get(0);
+        } else {
+            System.out.println("Select lesson group:");
+            for (int i = 0; i < groups.size(); i++) {
+                model.academic.LessonGroup g = groups.get(i);
+                System.out.println((i + 1) + ". " + g.getType() + " | "
+                        + g.getDayOfWeek() + " " + g.getStartTime() + "-" + g.getEndTime()
+                        + " | " + g.getRoom());
+            }
+            System.out.print("Choice: ");
+            int gIdx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+            if (gIdx < 0 || gIdx >= groups.size()) { System.out.println("Cancelled."); return; }
+            chosenGroup = groups.get(gIdx);
+        }
+
         try {
-            student.registerForCourse(selected);
+            student.registerForCourse(selected, chosenGroup);
+            storage.updateAndSave();
         } catch (model.exceptions.CreditLimitExceededException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        pause();
     }
 
     private void dropCourse() {
@@ -136,18 +159,17 @@ public class StudentMenu extends BaseMenu {
         if (idx < 0 || idx >= active.size()) { System.out.println("Cancelled."); return; }
 
         active.get(idx).drop();
-        pause();
+
     }
 
     private void viewEnrollments() {
         List<Enrollment> enrollments = student.getEnrollments();
-        System.out.println("\n========== My Enrollments ==========");
+        System.out.println("\n--- My Enrollments ---");
         if (enrollments.isEmpty()) {
             System.out.println("  No enrollments found.");
         } else {
             System.out.printf("%-30s %-10s %-12s %-22s %-8s%n",
                     "Course", "Group", "Day", "Time & Room", "Status");
-            System.out.println("-----------------------------------------------------------------------------------------------");
             for (Enrollment e : enrollments) {
                 System.out.printf("%-30s %-10s %-12s %-22s %-8s%n",
                         e.getCourse().getName(),
@@ -158,19 +180,17 @@ public class StudentMenu extends BaseMenu {
                         e.isActive() ? "Active" : "Dropped");
             }
         }
-        System.out.println("=====================================");
-        pause();
+
     }
 
     private void viewMarks() {
         List<Mark> marks = storage.getMarksForStudent(student);
-        System.out.println("\n========== My Marks ==========");
+        System.out.println("\n--- My Marks ---");
         if (marks.isEmpty()) {
             System.out.println("  No marks recorded yet.");
         } else {
             System.out.printf("%-35s %-10s %-10s %-10s %-10s %-8s%n",
                     "Course", "Attest.1", "Attest.2", "Final", "Total", "Passed");
-            System.out.println("----------------------------------------------------------------------------------------");
             for (Mark m : marks) {
                 System.out.printf("%-35s %-10.1f %-10.1f %-10.1f %-10.1f %-8s%n",
                         m.getCourse().getName(),
@@ -181,18 +201,16 @@ public class StudentMenu extends BaseMenu {
                         m.isPassed() ? "Yes" : "No");
             }
         }
-        System.out.println("==============================");
-        pause();
+
     }
 
     private void viewTranscript() {
         List<Enrollment> enrollments = student.getEnrollments();
         List<Mark> marks = storage.getMarksForStudent(student);
-        System.out.println("\n========== Transcript ==========");
+        System.out.println("\n--- Transcript ---");
         System.out.println("Student : " + student.getFirstName() + " " + student.getLastName());
         System.out.println("Major   : " + student.getMajor() + "  |  Year: " + student.getYear());
         System.out.println("GPA     : " + student.getGpa());
-        System.out.println("---------------------------------");
         if (enrollments.isEmpty()) {
             System.out.println("  No courses enrolled.");
         } else {
@@ -210,8 +228,7 @@ public class StudentMenu extends BaseMenu {
                         e.getCourse().getName(), status, grade);
             }
         }
-        System.out.println("=================================");
-        pause();
+
     }
 
     private void viewTeacherInfo() {
@@ -227,7 +244,7 @@ public class StudentMenu extends BaseMenu {
         if (idx < 0 || idx >= courses.size()) { System.out.println("Cancelled."); return; }
 
         Course course = courses.get(idx);
-        System.out.println("\n========== Teacher Info: " + course.getName() + " ==========");
+        System.out.println("\n--- Teacher Info: " + course.getName() + " ---");
         List<Teacher> lecturers = course.getLecturers();
         if (lecturers.isEmpty()) {
             System.out.println("  No teachers assigned yet.");
@@ -240,18 +257,16 @@ public class StudentMenu extends BaseMenu {
                         t.getDepartment());
             }
         }
-        System.out.println("=====================================================");
-        pause();
+
     }
 
     private void viewOrganizations() {
         List<StudentOrganization> orgs = storage.getOrganizations();
-        System.out.println("\n========== Student Organizations ==========");
+        System.out.println("\n--- Student Organizations ---");
         if (orgs.isEmpty()) {
             System.out.println("  No organizations found.");
         } else {
             System.out.printf("%-6s %-30s %-10s %-40s%n", "No.", "Name", "Members", "Goal");
-            System.out.println("---------------------------------------------------------------------------------------------");
             for (int i = 0; i < orgs.size(); i++) {
                 StudentOrganization o = orgs.get(i);
                 boolean isMember = o.getMembers().stream()
@@ -261,8 +276,7 @@ public class StudentMenu extends BaseMenu {
                         isMember ? "[Member]" : "");
             }
         }
-        System.out.println("==========================================");
-        pause();
+
     }
 
     private void joinOrganization() {
@@ -289,24 +303,30 @@ public class StudentMenu extends BaseMenu {
         } else {
             student.joinOrganization(org);
         }
-        pause();
+
     }
 
     private void viewNews() {
-        System.out.println("\n========== University News ==========");
+        System.out.println("\n--- University News ---");
         if (storage.getNewsList().isEmpty()) {
             System.out.println("  No news available.");
         } else {
             for (News n : storage.getNewsList()) {
                 System.out.println("\n  [" + n.getTopic() + "] " + n.getTitle());
                 System.out.println("  " + n.getContent());
-                System.out.println("  Posted by: " + n.getAuthor().getFirstName()
-                        + " " + n.getAuthor().getLastName());
+                System.out.println("  Posted by: "
+                        + (n.getAuthor() != null
+                            ? n.getAuthor().getFirstName() + " " + n.getAuthor().getLastName()
+                            : "System")
+                        + (n.isPinned() ? " [PINNED]" : ""));
+                if (!n.getComments().isEmpty()) {
+                    System.out.println("  Comments:");
+                    for (String c : n.getComments()) System.out.println("    > " + c);
+                }
                 System.out.println("  ---");
             }
         }
-        System.out.println("=====================================");
-        pause();
+
     }
 
     private void submitRequest() {
@@ -320,5 +340,50 @@ public class StudentMenu extends BaseMenu {
         model.communication.Request request = new model.communication.Request(id, topic, student, description);
         storage.saveRequest(request);
         System.out.println("Request submitted: " + topic);
+    }
+
+    private void rateTeacher() {
+        List<model.users.Teacher> teachers = new java.util.ArrayList<>();
+        for (model.users.User u : storage.getUsers().values())
+            if (u instanceof model.users.Teacher) teachers.add((model.users.Teacher) u);
+
+        if (teachers.isEmpty()) { System.out.println("No teachers found."); return; }
+
+        System.out.println("\n--- Rate a Teacher ---");
+        for (int i = 0; i < teachers.size(); i++)
+            System.out.println((i + 1) + ". " + teachers.get(i).getFirstName()
+                    + " " + teachers.get(i).getLastName()
+                    + " [" + teachers.get(i).getPosition() + "]");
+        System.out.print("Select teacher (0 to cancel): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+        if (idx < 0 || idx >= teachers.size()) { System.out.println("Cancelled."); return; }
+
+        System.out.print("Rating (1-5): ");
+        int rating = parseIntSafe(scanner.nextLine().trim(), 0);
+        if (rating < 1 || rating > 5) { System.out.println("Invalid rating. Must be 1-5."); return; }
+
+        student.rateTeacher(teachers.get(idx), rating);
+        storage.updateAndSave();
+    }
+
+    private void addCommentToNews() {
+        List<model.communication.News> newsList = storage.getNewsList();
+        if (newsList.isEmpty()) { System.out.println("No news available."); return; }
+
+        System.out.println("\n--- Add Comment to News ---");
+        for (int i = 0; i < newsList.size(); i++)
+            System.out.println((i + 1) + ". [" + newsList.get(i).getTopic() + "] "
+                    + newsList.get(i).getTitle());
+        System.out.print("Select news (0 to cancel): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+        if (idx < 0 || idx >= newsList.size()) { System.out.println("Cancelled."); return; }
+
+        System.out.print("Your comment: ");
+        String comment = scanner.nextLine().trim();
+        if (comment.isEmpty()) { System.out.println("Comment cannot be empty."); return; }
+
+        newsList.get(idx).getComments().add(student.getFirstName() + " " + student.getLastName() + ": " + comment);
+        storage.updateAndSave();
+        System.out.println("Comment added.");
     }
 }
