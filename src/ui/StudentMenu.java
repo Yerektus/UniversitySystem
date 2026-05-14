@@ -138,6 +138,10 @@ public class StudentMenu extends BaseMenu {
         } catch (model.exceptions.CreditLimitExceededException e) {
             System.out.println("Error: " + e.getMessage());
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
     }
 
     private void dropCourse() {
@@ -386,4 +390,8 @@ public class StudentMenu extends BaseMenu {
         storage.updateAndSave();
         System.out.println("Comment added.");
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e

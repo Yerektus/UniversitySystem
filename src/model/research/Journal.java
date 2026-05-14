@@ -1,8 +1,11 @@
 package model.research;
+
+import model.communication.News;
 import model.users.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 public class Journal implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -30,31 +33,32 @@ public class Journal implements Serializable {
         System.out.println(user.getFirstName() + " unsubscribed from " + name);
     }
 
-    public void publishPaper(ResearchPaper paper) {
+    public News publishPaper(ResearchPaper paper) {
         papers.add(paper);
         notifySubscribers(paper);
+        return buildNewsAnnouncement(paper);
     }
 
-    public void notifySubscribers(ResearchPaper paper) {
+    private void notifySubscribers(ResearchPaper paper) {
         for (User u : subscribers) {
-            System.out.println("Notifying " + u.getFirstName() + " about: " + paper.getTitle());
+            u.onPaperPublished(paper, this);
         }
     }
 
+    private News buildNewsAnnouncement(ResearchPaper paper) {
+        String newsId = "N" + System.currentTimeMillis();
+        String title = "New Paper Published in " + name;
+        String content = "\"" + paper.getTitle() + "\" has been published in " + name + ".";
+        return new News(newsId, title, content, "Research", null);
+    }
+
     public String getJournalId() { return journalId; }
-
     public void setJournalId(String journalId) { this.journalId = journalId; }
-
     public String getName() { return name; }
-
     public void setName(String name) { this.name = name; }
-
     public List<ResearchPaper> getPapers() { return papers; }
-
     public void setPapers(List<ResearchPaper> papers) { this.papers = papers; }
-
     public List<User> getSubscribers() { return subscribers; }
-
     public void setSubscribers(List<User> subscribers) { this.subscribers = subscribers; }
 
     @Override

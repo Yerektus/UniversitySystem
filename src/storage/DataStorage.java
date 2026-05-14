@@ -177,6 +177,43 @@ public class DataStorage {
         newsList.add(topNews);
     }
 
+    
+    public void publishPaperToJournal(ResearchPaper paper, Journal journal) {
+        News announcement = journal.publishPaper(paper);
+        if (announcement != null) {
+            announcement.setPinned(true);
+            newsList.add(announcement);
+        }
+        updateTopCitedResearcherNews();
+        saveAll();
+    }
+
+    private void updateTopCitedResearcherNews() {
+        model.research.Researcher topResearcher = null;
+        int maxCitations = 0;
+        for (User u : users.values()) {
+            if (u instanceof model.research.Researcher) {
+                model.research.Researcher r = (model.research.Researcher) u;
+                int total = r.getPapers().stream().mapToInt(model.research.ResearchPaper::getCitations).sum();
+                if (total > maxCitations) { maxCitations = total; topResearcher = r; }
+            }
+        }
+        if (topResearcher == null) return;
+        String name = topResearcher instanceof User
+                ? ((User) topResearcher).getFirstName() + " " + ((User) topResearcher).getLastName()
+                : "Unknown";
+
+        newsList.removeIf(n -> n.getTitle().startsWith("Top Cited Researcher"));
+
+        String newsId = "N_TOP" + System.currentTimeMillis();
+        News topNews = new News(newsId,
+                "Top Cited Researcher: " + name,
+                name + " is the top cited researcher with " + maxCitations + " total citations.",
+                "Research", null);
+        topNews.setPinned(true);
+        newsList.add(topNews);
+    }
+
     public void removeUser(String userId) {
         users.remove(userId);
         saveAll();
@@ -213,43 +250,75 @@ public class DataStorage {
 
     private void seedData() {
         Admin admin = new Admin(
+<<<<<<< HEAD
                 "admin001", "admin123", "Aibek", "Seitkali",
                 "a_seitkali@kbtu.kz", Language.EN, "IT Department");
 
         Student student = new Student(
                 "student001", "student123", "Daniyar", "Bekov",
+=======
+                "AD0001", "admin123", "Aibek", "Seitkali",
+                "a_seitkali@kbtu.kz", Language.EN, "IT Department");
+
+        Student student = new Student(
+                "23B030001", "student123", "Daniyar", "Bekov",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "d_bekov@kbtu.kz", Language.KZ, "Computer Science", 2);
         student.setGpa(3.5);
         student.setTotalCredits(10);
 
         Student student2 = new Student(
+<<<<<<< HEAD
                 "student002", "pass123", "Aliya", "Ospanova",
+=======
+                "23B030002", "pass123", "Aliya", "Ospanova",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "a_ospanova@kbtu.kz", Language.KZ, "Information Systems", 1);
         student2.setGpa(3.8);
         student2.setTotalCredits(5);
 
         GraduateStudent gradStudent = new GraduateStudent(
+<<<<<<< HEAD
                 "grad001", "grad123", "Madina", "Nurova",
+=======
+                "23M030001", "grad123", "Madina", "Nurova",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "m_nurova@kbtu.kz", Language.RU, "Data Science", 1,
                 GraduateType.MASTER, "AI Research");
 
         Teacher teacher = new Teacher(
+<<<<<<< HEAD
                 "teacher001", "teacher123", "Olga", "Ivanova",
+=======
+                "T030001", "teacher123", "Olga", "Ivanova",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "o_ivanova@kbtu.kz", Language.RU, "CS Department",
                 TeacherPosition.PROFESSOR);
 
         Teacher teacher2 = new Teacher(
+<<<<<<< HEAD
                 "teacher002", "pass123", "Bekzat", "Akhanov",
+=======
+                "T040001", "pass123", "Bekzat", "Akhanov",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "b_akhanov@kbtu.kz", Language.KZ, "Math Department",
                 TeacherPosition.LECTOR);
 
         Manager manager = new Manager(
+<<<<<<< HEAD
                 "manager001", "manager123", "Nursultan", "Akhmetov",
+=======
+                "MG030001", "manager123", "Nursultan", "Akhmetov",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "n_akhmetov@kbtu.kz", Language.KZ, "Registration Office",
                 ManagerType.OR);
 
         TechSupportSpecialist techSupport = new TechSupportSpecialist(
+<<<<<<< HEAD
                 "tech001", "tech123", "Arman", "Zhukov",
+=======
+                "TS0001", "tech123", "Arman", "Zhukov",
+>>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
                 "a_zhukov@kbtu.kz", Language.EN, "Support Department");
 
         users.put(admin.getId(), admin);

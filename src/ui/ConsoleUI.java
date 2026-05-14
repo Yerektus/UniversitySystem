@@ -11,9 +11,9 @@ public class ConsoleUI {
     private final DataStorage storage = DataStorage.getInstance();
 
     public void start() {
-        System.out.println("==========================================");
+        System.out.println("");
         System.out.println("     Welcome to University System");
-        System.out.println("==========================================");
+        System.out.println("");
         while (true) {
             showMainMenu();
         }
@@ -40,21 +40,20 @@ public class ConsoleUI {
 
     private void login() {
         System.out.println("\n--- Login ---");
-        System.out.print("Email: ");
-        String email = scanner.nextLine().trim();
+        System.out.print("ID or Email: ");
+        String identifier = scanner.nextLine().trim();
         System.out.print("Password: ");
         String password = scanner.nextLine().trim();
 
         User found = null;
         for (User u : storage.getUsers().values()) {
-            if (u.getEmail().equals(email) && u.getPassword().equals(password)) {
-                found = u;
-                break;
-            }
+            boolean match = (u.getEmail().equalsIgnoreCase(identifier) || u.getId().equals(identifier))
+                    && u.getPassword().equals(password);
+            if (match) { found = u; break; }
         }
 
         if (found == null) {
-            System.out.println("Invalid email or password.");
+            System.out.println("Invalid ID/email or password.");
             return;
         }
 
