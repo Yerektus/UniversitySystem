@@ -82,21 +82,24 @@ public class ManagerMenu extends BaseMenu {
         System.out.print("Department/Faculty: ");
         String department = scanner.nextLine().trim();
 
-        String id       = "U" + System.currentTimeMillis();
+        String id;
         String email    = util.UserCredentialGenerator.generateEmail(firstName, lastName);
         String password = util.UserCredentialGenerator.generatePassword();
         User user       = null;
 
         switch (role) {
             case "1": {
+                SchoolCode school = selectSchool();
                 System.out.print("Major: ");
                 String major = scanner.nextLine().trim();
                 System.out.print("Year (1-4): ");
                 int year = parseIntSafe(scanner.nextLine().trim(), 1);
+                id = util.UserCredentialGenerator.generateStudentId("B", school);
                 user = new Student(id, password, firstName, lastName, email, language, major, year);
                 break;
             }
             case "2": {
+                SchoolCode school = selectSchool();
                 System.out.print("Major: ");
                 String major = scanner.nextLine().trim();
                 System.out.print("Year (1-2): ");
@@ -104,12 +107,15 @@ public class ManagerMenu extends BaseMenu {
                 System.out.println("Type: 1. MASTER  2. PHD");
                 System.out.print("Choice: ");
                 GraduateType gt = scanner.nextLine().trim().equals("2") ? GraduateType.PHD : GraduateType.MASTER;
+                String degreeType = gt == GraduateType.PHD ? "P" : "M";
                 System.out.print("Research target/topic: ");
                 String target = scanner.nextLine().trim();
+                id = util.UserCredentialGenerator.generateStudentId(degreeType, school);
                 user = new GraduateStudent(id, password, firstName, lastName, email, language, major, year, gt, target);
                 break;
             }
             case "3": {
+                SchoolCode school = selectSchool();
                 System.out.println("Position: 1. TUTOR  2. LECTOR  3. SENIOR  4. PROFESSOR");
                 System.out.print("Choice: ");
                 TeacherPosition pos;
@@ -119,10 +125,12 @@ public class ManagerMenu extends BaseMenu {
                     case "4": pos = TeacherPosition.PROFESSOR; break;
                     default:  pos = TeacherPosition.LECTOR;    break;
                 }
+                id = util.UserCredentialGenerator.generateTeacherId(school);
                 user = new Teacher(id, password, firstName, lastName, email, language, department, pos);
                 break;
             }
             case "4":
+                id = util.UserCredentialGenerator.generateTechSupportId();
                 user = new TechSupportSpecialist(id, password, firstName, lastName, email, language, department);
                 break;
             default:
@@ -366,5 +374,16 @@ public class ManagerMenu extends BaseMenu {
             case "3": return Language.RU;
             default:  return Language.EN;
         }
+    }
+
+    private SchoolCode selectSchool() {
+        System.out.println("School:");
+        SchoolCode[] values = SchoolCode.values();
+        for (int i = 0; i < values.length; i++)
+            System.out.println((i + 1) + ". " + values[i].getDisplayName());
+        System.out.print("Choice (default FIT): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 3) - 1;
+        if (idx < 0 || idx >= values.length) return SchoolCode.FIT;
+        return values[idx];
     }
 }
