@@ -207,10 +207,11 @@ public class TeacherMenu extends BaseMenu {
         System.out.print("Describe the issue: ");
         String description = scanner.nextLine().trim();
 
-        new Complaint(UUID.randomUUID().toString(),
+        Complaint complaint = new Complaint(UUID.randomUUID().toString(),
                 teacher.getFirstName() + " " + teacher.getLastName(),
                 student.getFirstName() + " " + student.getLastName(),
                 description, level, new Date());
+        storage.saveComplaint(complaint);
         System.out.println("Complaint sent [" + level + "] about " + student.getFirstName() + " " + student.getLastName());
     }
 

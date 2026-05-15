@@ -2,6 +2,7 @@ package ui;
 
 import model.academic.Course;
 import model.academic.Mark;
+import model.communication.Complaint;
 import model.communication.News;
 import model.enums.*;
 import model.research.ResearchPaper;
@@ -36,6 +37,7 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("11. Top cited researcher (university)");
         System.out.println("12. Top cited researcher by year");
         System.out.println("13. Top cited researcher by school");
+        System.out.println("14. View complaints");
         System.out.println("0.  Logout");
     }
 
@@ -55,6 +57,7 @@ public class ManagerMenu extends BaseMenu {
             case "11": topCitedUniversity();          break;
             case "12": topCitedByYear();              break;
             case "13": topCitedBySchool();            break;
+            case "14": viewComplaints();               break;
             case "0":  logout();                      break;
             default:   System.out.println("Invalid choice.");
         }
@@ -337,6 +340,20 @@ public class ManagerMenu extends BaseMenu {
             long cp = cm.stream().filter(Mark::isPassed).count();
             double ca = cm.stream().mapToDouble(Mark::getTotalMark).average().orElse(0);
             System.out.printf("%-30s %-8d %-8d %-10.2f%n", e.getKey(), cp, cm.size() - cp, ca);
+        }
+    }
+
+    private void viewComplaints() {
+        List<Complaint> complaints = storage.getComplaints();
+        System.out.println("\n--- Complaints (" + complaints.size() + ") ---");
+        if (complaints.isEmpty()) { System.out.println("No complaints filed."); return; }
+        for (int i = 0; i < complaints.size(); i++) {
+            Complaint c = complaints.get(i);
+            System.out.println((i + 1) + ". [" + c.getUrgency() + "] "
+                    + "From: " + c.getSender()
+                    + " | About: " + c.getTarget());
+            System.out.println("   " + c.getDescription());
+            System.out.println("   Filed: " + c.getCreatedAt());
         }
     }
 

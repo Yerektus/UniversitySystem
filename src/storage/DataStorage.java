@@ -5,6 +5,7 @@ import model.academic.Enrollment;
 import model.academic.LessonGroup;
 import model.academic.Mark;
 import model.academic.StudentOrganization;
+import model.communication.Complaint;
 import model.communication.Message;
 import model.communication.News;
 import model.communication.Request;
@@ -32,6 +33,7 @@ public class DataStorage {
     private List<Mark> marks;
     private List<ResearchProject> researchProjects;
     private List<Message> messages;
+    private List<Complaint> complaints;
 
     private DataStorage() {
         users = new HashMap<>();
@@ -44,6 +46,7 @@ public class DataStorage {
         marks = new ArrayList<>();
         researchProjects = new ArrayList<>();
         messages = new ArrayList<>();
+        complaints = new ArrayList<>();
 
         new File(DATA_PATH).mkdirs();
 
@@ -91,6 +94,7 @@ public class DataStorage {
         Object m  = deserialize("marks");
         Object rp = deserialize("researchProjects");
         Object ms = deserialize("messages");
+        Object co = deserialize("complaints");
 
         if (u == null) return false;
 
@@ -104,6 +108,7 @@ public class DataStorage {
         marks         = (List<Mark>)                 m;
         researchProjects = rp != null ? (List<ResearchProject>) rp : new ArrayList<>();
         messages         = ms != null ? (List<Message>)         ms : new ArrayList<>();
+        complaints       = co != null ? (List<Complaint>)       co : new ArrayList<>();
         return true;
     }
 
@@ -118,6 +123,7 @@ public class DataStorage {
         serialize(marks,            "marks");
         serialize(researchProjects, "researchProjects");
         serialize(messages,         "messages");
+        serialize(complaints,       "complaints");
     }
 
 
@@ -139,6 +145,7 @@ public class DataStorage {
     public void saveMark(Mark mark)                      { marks.add(mark);           saveAll(); }
     public void saveResearchProject(ResearchProject p)   { researchProjects.add(p);   saveAll(); }
     public void saveMessage(Message message)             { messages.add(message);     saveAll(); }
+    public void saveComplaint(Complaint complaint)       { complaints.add(complaint); saveAll(); }
 
     
     public void publishPaperToJournal(ResearchPaper paper, Journal journal) {
@@ -203,6 +210,7 @@ public class DataStorage {
     public List<Mark>                  getMarks()         { return marks; }
     public List<ResearchProject>       getResearchProjects() { return researchProjects; }
     public List<Message>               getMessages()         { return messages; }
+    public List<Complaint>             getComplaints()       { return complaints; }
 
     public List<Message> getMessagesForUser(User user) {
         List<Message> result = new ArrayList<>();
