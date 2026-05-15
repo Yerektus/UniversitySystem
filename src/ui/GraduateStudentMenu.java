@@ -39,21 +39,23 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.println("10. Join a student organization");
         System.out.println("11. View news");
         System.out.println("12. Submit tech support request");
+        System.out.println("13. Rate a teacher");
+        System.out.println("14. Add comment to news");
         System.out.println("--- Graduate options ---");
-        System.out.println("13. View / set supervisor");
-        System.out.println("14. Publish research paper");
-        System.out.println("15. View my papers");
-        System.out.println("16. View / join research projects");
+        System.out.println("15. View / set supervisor");
+        System.out.println("16. Publish research paper");
+        System.out.println("17. View my papers");
+        System.out.println("18. View / join research projects");
         System.out.println("0.  Logout");
     }
 
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "13": viewSetSupervisor();     break;
-            case "14": publishPaper();          break;
-            case "15": viewPapers();            break;
-            case "16": researchProjects();      break;
+            case "15": viewSetSupervisor();  break;
+            case "16": publishPaper();       break;
+            case "17": viewPapers();         break;
+            case "18": researchProjects();   break;
             default:   super.handleChoice(choice);
         }
     }
