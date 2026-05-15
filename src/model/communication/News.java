@@ -13,7 +13,6 @@ public class News implements Serializable {
     private String title;
     private String content;
     private String topic;
-    private User sender;
     private boolean pinned;
     private Date publishedAt;
     private User author;
@@ -25,7 +24,6 @@ public class News implements Serializable {
         this.content = content;
         this.topic = topic;
         this.author = author;
-        this.sender = author;
         this.pinned = false;
         this.publishedAt = new Date();
         this.comments = new ArrayList<>();
@@ -47,9 +45,7 @@ public class News implements Serializable {
 
     public void setTopic(String topic) { this.topic = topic; }
 
-    public User getSender() { return sender; }
 
-    public void setSender(User sender) { this.sender = sender; }
 
     public boolean isPinned() { return pinned; }
 
