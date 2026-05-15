@@ -5,7 +5,6 @@ import model.academic.Mark;
 import model.communication.News;
 import model.enums.*;
 import model.research.ResearchPaper;
-import model.research.Researcher;
 import model.users.*;
 import system.University;
 import storage.DataStorage;
