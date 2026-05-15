@@ -28,12 +28,13 @@ public class AdminMenu extends BaseMenu {
         System.out.println("2.  View all users");
         System.out.println("3.  Add user");
         System.out.println("4.  Remove user");
-        System.out.println("5.  View all requests");
-        System.out.println("6.  Accept a request");
-        System.out.println("7.  Reject a request");
-        System.out.println("8.  View all news");
-        System.out.println("9.  View action logs");
-        System.out.println("10. View system stats");
+        System.out.println("5.  Update user");
+        System.out.println("6.  View all requests");
+        System.out.println("7.  Accept a request");
+        System.out.println("8.  Reject a request");
+        System.out.println("9.  View all news");
+        System.out.println("10. View action logs");
+        System.out.println("11. View system stats");
         System.out.println("0.  Logout");
     }
 
@@ -44,12 +45,13 @@ public class AdminMenu extends BaseMenu {
             case "2":  viewAllUsers();  break;
             case "3":  addUser();       break;
             case "4":  removeUser();    break;
-            case "5":  viewRequests();  break;
-            case "6":  acceptRequest(); break;
-            case "7":  rejectRequest(); break;
-            case "8":  viewAllNews();   break;
-            case "9":  viewLogs();      break;
-            case "10": viewStats();     break;
+            case "5":  updateUser();    break;
+            case "6":  viewRequests();  break;
+            case "7":  acceptRequest(); break;
+            case "8":  rejectRequest(); break;
+            case "9":  viewAllNews();   break;
+            case "10": viewLogs();      break;
+            case "11": viewStats();     break;
             case "0":  logout();        break;
             default:   System.out.println("Invalid choice.");
         }
@@ -175,6 +177,77 @@ public class AdminMenu extends BaseMenu {
         System.out.println("Account created.");
         System.out.println("  Email   : " + email);
         System.out.println("  Password: " + password);
+    }
+
+    private void updateUser() {
+        List<User> users = new ArrayList<>(storage.getUsers().values());
+        if (users.isEmpty()) { System.out.println("No users found."); return; }
+
+        System.out.println("\n--- Update User ---");
+        for (int i = 0; i < users.size(); i++)
+            System.out.printf("%-4d [%-25s] %s %s%n",
+                    i + 1, users.get(i).getClass().getSimpleName(),
+                    users.get(i).getFirstName(), users.get(i).getLastName());
+        System.out.print("Select user (0 to cancel): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+        if (idx < 0 || idx >= users.size()) { System.out.println("Cancelled."); return; }
+        User user = users.get(idx);
+
+        System.out.println("Editing: " + user.getFirstName() + " " + user.getLastName()
+                + " (" + user.getClass().getSimpleName() + ")");
+        System.out.println("Leave blank to keep current value.");
+
+        System.out.print("First name [" + user.getFirstName() + "]: ");
+        String val = scanner.nextLine().trim();
+        if (!val.isEmpty()) user.setFirstName(val);
+
+        System.out.print("Last name [" + user.getLastName() + "]: ");
+        val = scanner.nextLine().trim();
+        if (!val.isEmpty()) user.setLastName(val);
+
+        System.out.print("Email [" + user.getEmail() + "]: ");
+        val = scanner.nextLine().trim();
+        if (!val.isEmpty()) user.setEmail(val);
+
+        System.out.println("Language [" + user.getLanguage() + "] 1. KZ  2. EN  3. RU: ");
+        val = scanner.nextLine().trim();
+        if (!val.isEmpty()) user.setLanguage(parseLanguage(val));
+
+        if (user instanceof Employee) {
+            Employee emp = (Employee) user;
+            System.out.print("Department [" + emp.getDepartment() + "]: ");
+            val = scanner.nextLine().trim();
+            if (!val.isEmpty()) emp.setDepartment(val);
+        }
+
+        if (user instanceof Teacher) {
+            Teacher t = (Teacher) user;
+            System.out.println("Position [" + t.getPosition() + "] 1. TUTOR  2. LECTOR  3. SENIOR  4. PROFESSOR: ");
+            val = scanner.nextLine().trim();
+            if (!val.isEmpty()) {
+                switch (val) {
+                    case "1": t.setPosition(TeacherPosition.TUTOR);     break;
+                    case "2": t.setPosition(TeacherPosition.LECTOR);    break;
+                    case "3": t.setPosition(TeacherPosition.SENIOR);    break;
+                    case "4": t.setPosition(TeacherPosition.PROFESSOR); break;
+                }
+            }
+        }
+
+        if (user instanceof Student) {
+            Student s = (Student) user;
+            System.out.print("Major [" + s.getMajor() + "]: ");
+            val = scanner.nextLine().trim();
+            if (!val.isEmpty()) s.setMajor(val);
+
+            System.out.print("Year [" + s.getYear() + "]: ");
+            val = scanner.nextLine().trim();
+            if (!val.isEmpty()) s.setYear(parseIntSafe(val, s.getYear()));
+        }
+
+        storage.updateAndSave();
+        ActionLogger.getInstance().log(admin.getId(), "UPDATE_USER: " + user.getEmail());
+        System.out.println("User updated successfully.");
     }
 
     private void removeUser() {
