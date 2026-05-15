@@ -7,6 +7,7 @@ import model.enums.*;
 import model.research.ResearchPaper;
 import model.research.Researcher;
 import model.users.*;
+import system.University;
 import storage.DataStorage;
 
 import java.util.*;
@@ -33,6 +34,9 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("8.  View teachers");
         System.out.println("9.  Academic performance report");
         System.out.println("10. Print all researchers' papers");
+        System.out.println("11. Top cited researcher (university)");
+        System.out.println("12. Top cited researcher by year");
+        System.out.println("13. Top cited researcher by school");
         System.out.println("0.  Logout");
     }
 
@@ -47,9 +51,12 @@ public class ManagerMenu extends BaseMenu {
             case "6":  manageNews();             break;
             case "7":  viewStudents();           break;
             case "8":  viewTeachers();           break;
-            case "9":  academicReport();         break;
-            case "10": printAllResearchPapers(); break;
-            case "0":  logout();                 break;
+            case "9":  academicReport();              break;
+            case "10": printAllResearchPapers();      break;
+            case "11": topCitedUniversity();          break;
+            case "12": topCitedByYear();              break;
+            case "13": topCitedBySchool();            break;
+            case "0":  logout();                      break;
             default:   System.out.println("Invalid choice.");
         }
     }
@@ -337,21 +344,36 @@ public class ManagerMenu extends BaseMenu {
     private void printAllResearchPapers() {
         System.out.println("Sort by: 1. Citations  2. Date  3. Length");
         System.out.print("Choice: ");
-        Comparator<ResearchPaper> comparator;
+        java.util.Comparator<ResearchPaper> comparator;
         switch (scanner.nextLine().trim()) {
             case "1": comparator = ResearchPaper.BY_CITATIONS; break;
             case "3": comparator = ResearchPaper.BY_LENGTH;    break;
             default:  comparator = ResearchPaper.BY_DATE;      break;
         }
-        List<ResearchPaper> allPapers = new ArrayList<>();
-        for (User u : storage.getUsers().values())
-            if (u instanceof Researcher)
-                allPapers.addAll(((Researcher) u).getPapers());
-        if (allPapers.isEmpty()) { System.out.println("No research papers found."); return; }
-        allPapers.sort(comparator);
-        System.out.println("\n--- All Research Papers (" + allPapers.size() + ") ---");
-        for (ResearchPaper p : allPapers)
-            System.out.println(p.getCitation(model.enums.CitationFormat.PLAIN_TEXT));
+        University.getInstance().printAllResearcherPapers(comparator);
+    }
+
+    private void topCitedUniversity() {
+        System.out.println("\n--- Top Cited Researcher (University) ---");
+        University.getInstance().printTopCitedResearcher();
+    }
+
+    private void topCitedByYear() {
+        System.out.print("Enter year: ");
+        int year = parseIntSafe(scanner.nextLine().trim(), java.time.Year.now().getValue());
+        System.out.println("\n--- Top Cited Researcher in " + year + " ---");
+        University.getInstance().printTopCitedResearcherByYear(year);
+    }
+
+    private void topCitedBySchool() {
+        System.out.println("\n--- Select School ---");
+        SchoolCode[] values = SchoolCode.values();
+        for (int i = 0; i < values.length; i++)
+            System.out.println((i + 1) + ". " + values[i].getDisplayName());
+        System.out.print("Choice: ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 3) - 1;
+        if (idx < 0 || idx >= values.length) idx = 2;
+        University.getInstance().printTopCitedResearcherBySchool(values[idx]);
     }
 
     private List<Student> getStudents() {

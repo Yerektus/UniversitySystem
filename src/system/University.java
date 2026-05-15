@@ -1,84 +1,111 @@
 package system;
-import model.academic.Course;
-import model.research.Journal;
-import model.research.ResearchProject;
+
+import model.enums.SchoolCode;
+import model.research.ResearchPaper;
 import model.research.Researcher;
 import model.users.User;
+import storage.DataStorage;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
 public class University {
 
-    private String name;
-    private List<User> users;
-    private List<Course> courses;
-    private List<Journal> journals;
-    private List<ResearchProject> projects;
+    private static University instance;
+    private final String name;
 
-    public University(String name) {
+    private University(String name) {
         this.name = name;
-        this.users = new ArrayList<>();
-        this.courses = new ArrayList<>();
-        this.journals = new ArrayList<>();
-        this.projects = new ArrayList<>();
     }
 
-    public void printAll(Researcher researcher) {
-        System.out.println("=== University: " + name + " ===");
-        System.out.println("Users: " + users.size());
-        System.out.println("Courses: " + courses.size());
-        System.out.println("Journals: " + journals.size());
-        System.out.println("Projects: " + projects.size());
+    public static University getInstance() {
+        if (instance == null) instance = new University("Kazakh-British Technical University");
+        return instance;
     }
+
+    public String getName() { return name; }
 
     public Researcher getTopCitedResearcher() {
         Researcher top = null;
-        int maxH = -1;
-        for (User u : users) {
+        int maxCitations = -1;
+        for (User u : DataStorage.getInstance().getUsers().values()) {
             if (u instanceof Researcher) {
-                int h = ((Researcher) u).calculateHindex();
-                if (h > maxH) {
-                    maxH = h;
-                    top = (Researcher) u;
-                }
+                Researcher r = (Researcher) u;
+                int total = r.getPapers().stream().mapToInt(ResearchPaper::getCitations).sum();
+                if (total > maxCitations) { maxCitations = total; top = r; }
             }
         }
         return top;
     }
 
     public Researcher getTopCitedResearcherByYear(int year) {
-        System.out.println("Finding top researcher for year: " + year);
-        return getTopCitedResearcher();
-    }
-
-    public Researcher getTopCitedResearcherBySchool(String school) {
-        System.out.println("Finding top researcher in school: " + school);
-        return getTopCitedResearcher();
-    }
-
-    public void generateTopCitedNews() {
-        Researcher top = getTopCitedResearcher();
-        if (top != null) {
-            System.out.println("Top cited researcher: " + top);
+        Researcher top = null;
+        int maxCitations = -1;
+        for (User u : DataStorage.getInstance().getUsers().values()) {
+            if (!(u instanceof Researcher)) continue;
+            Researcher r = (Researcher) u;
+            int total = 0;
+            for (ResearchPaper p : r.getPapers()) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(p.getDatePublished());
+                if (cal.get(Calendar.YEAR) == year) total += p.getCitations();
+            }
+            if (total > maxCitations) { maxCitations = total; top = r; }
         }
+        return top;
     }
 
-    public String getName() { return name; }
+    public Researcher getTopCitedResearcherBySchool(SchoolCode school) {
+        Researcher top = null;
+        int maxCitations = -1;
+        for (User u : DataStorage.getInstance().getUsers().values()) {
+            if (!(u instanceof Researcher)) continue;
+            if (!u.getId().contains(school.getCode())) continue;
+            Researcher r = (Researcher) u;
+            int total = r.getPapers().stream().mapToInt(ResearchPaper::getCitations).sum();
+            if (total > maxCitations) { maxCitations = total; top = r; }
+        }
+        return top;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void printTopCitedResearcher() {
+        Researcher top = getTopCitedResearcher();
+        if (top == null) { System.out.println("No researchers found."); return; }
+        User u = (User) top;
+        System.out.println("Top cited researcher: " + u.getFirstName() + " " + u.getLastName()
+                + " | h-index: " + top.calculateHindex()
+                + " | papers: " + top.getPapers().size());
+    }
 
-    public List<User> getUsers() { return users; }
+    public void printTopCitedResearcherByYear(int year) {
+        Researcher top = getTopCitedResearcherByYear(year);
+        if (top == null) { System.out.println("No researchers found for year " + year + "."); return; }
+        User u = (User) top;
+        System.out.println("Top cited researcher in " + year + ": "
+                + u.getFirstName() + " " + u.getLastName()
+                + " | h-index: " + top.calculateHindex());
+    }
 
-    public void setUsers(List<User> users) { this.users = users; }
+    public void printTopCitedResearcherBySchool(SchoolCode school) {
+        Researcher top = getTopCitedResearcherBySchool(school);
+        if (top == null) { System.out.println("No researchers found for " + school.getDisplayName() + "."); return; }
+        User u = (User) top;
+        System.out.println("Top cited researcher in " + school.getDisplayName() + ": "
+                + u.getFirstName() + " " + u.getLastName()
+                + " | h-index: " + top.calculateHindex());
+    }
 
-    public List<Course> getCourses() { return courses; }
+    public void printAllResearcherPapers(java.util.Comparator<ResearchPaper> comparator) {
+        List<ResearchPaper> allPapers = new ArrayList<>();
+        for (User u : DataStorage.getInstance().getUsers().values())
+            if (u instanceof Researcher)
+                allPapers.addAll(((Researcher) u).getPapers());
 
-    public void setCourses(List<Course> courses) { this.courses = courses; }
-
-    public List<Journal> getJournals() { return journals; }
-
-    public void setJournals(List<Journal> journals) { this.journals = journals; }
-
-    public List<ResearchProject> getProjects() { return projects; }
-
-    public void setProjects(List<ResearchProject> projects) { this.projects = projects; }
+        if (allPapers.isEmpty()) { System.out.println("No research papers found."); return; }
+        allPapers.sort(comparator);
+        System.out.println("--- All Research Papers (" + allPapers.size() + ") ---");
+        for (ResearchPaper p : allPapers)
+            System.out.println(p.getCitation(model.enums.CitationFormat.PLAIN_TEXT));
+    }
 }

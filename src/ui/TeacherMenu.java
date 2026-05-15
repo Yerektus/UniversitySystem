@@ -40,10 +40,7 @@ public class TeacherMenu extends BaseMenu {
         System.out.println("6. Send message to employee");
         if (teacher.getPosition() == TeacherPosition.PROFESSOR)
             System.out.println("7. Research papers");
-<<<<<<< HEAD
         System.out.println("8. View inbox");
-=======
->>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
         System.out.println("0. Logout");
     }
 
@@ -60,10 +57,7 @@ public class TeacherMenu extends BaseMenu {
                 if (teacher.getPosition() == TeacherPosition.PROFESSOR) researchMenu();
                 else System.out.println("Invalid choice.");
                 break;
-<<<<<<< HEAD
             case "8": viewInbox(); break;
-=======
->>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
             case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
@@ -242,13 +236,8 @@ public class TeacherMenu extends BaseMenu {
         System.out.print("Message: ");
         String content = scanner.nextLine().trim();
 
-<<<<<<< HEAD
         Message msg = new Message(UUID.randomUUID().toString(), topic, content, teacher, recipient);
         storage.saveMessage(msg);
-=======
-        new Message(UUID.randomUUID().toString(), topic, content, teacher, recipient);
-        storage.updateAndSave();
->>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
         System.out.println("Message sent to " + recipient.getFirstName() + " " + recipient.getLastName());
     }
 
@@ -288,7 +277,6 @@ public class TeacherMenu extends BaseMenu {
         System.out.println("Paper published.");
     }
 
-<<<<<<< HEAD
     private void viewInbox() {
         List<model.communication.Message> inbox = storage.getMessagesForUser(teacher);
         System.out.println("\n--- Inbox (" + inbox.size() + ") ---");
@@ -302,8 +290,6 @@ public class TeacherMenu extends BaseMenu {
         }
     }
 
-=======
->>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
     private List<Course> getTeacherCourses() {
         List<Course> result = new ArrayList<>();
         for (Course c : storage.getCourses()) {
@@ -321,8 +307,4 @@ public class TeacherMenu extends BaseMenu {
                     && g.getTeacher().getId().equals(teacher.getId())) return g;
         return null;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 94ebb5ed1b1fe21833c77e7c7839f305fa61d13e
