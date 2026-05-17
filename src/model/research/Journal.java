@@ -65,4 +65,14 @@ public class Journal implements Serializable {
     public String toString() {
         return "Journal{name='" + name + "', papers=" + papers.size() + "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Journal)) return false;
+        return journalId.equals(((Journal) obj).journalId);
+    }
+
+    @Override
+    public int hashCode() { return journalId.hashCode(); }
 }

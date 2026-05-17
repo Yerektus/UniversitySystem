@@ -99,4 +99,20 @@ public class LessonGroup implements Serializable {
     public List<Enrollment> getEnrollments() { return enrollments; }
 
     public void setEnrollments(List<Enrollment> enrollments) { this.enrollments = enrollments; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof LessonGroup)) return false;
+        return groupId.equals(((LessonGroup) obj).groupId);
+    }
+
+    @Override
+    public int hashCode() { return groupId.hashCode(); }
+
+    @Override
+    public String toString() {
+        return "LessonGroup{id='" + groupId + "', course=" + course.getName()
+                + ", type=" + type + ", " + getScheduleInfo() + "}";
+    }
 }

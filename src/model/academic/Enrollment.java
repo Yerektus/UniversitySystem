@@ -62,4 +62,14 @@ public class Enrollment implements Serializable {
         return "Enrollment{student=" + student.getFirstName() + ", course=" + course.getName()
                 + ", active=" + isActive + "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Enrollment)) return false;
+        return enrollmentId.equals(((Enrollment) obj).enrollmentId);
+    }
+
+    @Override
+    public int hashCode() { return enrollmentId.hashCode(); }
 }

@@ -78,4 +78,14 @@ public class Course implements Serializable {
     public String toString() {
         return "Course{id='" + courseId + "', name='" + name + "', credits=" + credits + ", type=" + type + "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Course)) return false;
+        return courseId.equals(((Course) obj).courseId);
+    }
+
+    @Override
+    public int hashCode() { return courseId.hashCode(); }
 }

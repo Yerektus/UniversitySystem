@@ -67,4 +67,14 @@ public class News implements Serializable {
     public String toString() {
         return "News{title='" + title + "', topic='" + topic + "', pinned=" + pinned + "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof News)) return false;
+        return newsId.equals(((News) obj).newsId);
+    }
+
+    @Override
+    public int hashCode() { return newsId.hashCode(); }
 }

@@ -57,4 +57,14 @@ public class Request implements Serializable {
     public String toString() {
         return "Request{topic='" + topic + "', status=" + status + "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Request)) return false;
+        return requestId.equals(((Request) obj).requestId);
+    }
+
+    @Override
+    public int hashCode() { return requestId.hashCode(); }
 }
