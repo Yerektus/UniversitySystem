@@ -350,8 +350,8 @@ public class ManagerMenu extends BaseMenu {
         for (int i = 0; i < complaints.size(); i++) {
             Complaint c = complaints.get(i);
             System.out.println((i + 1) + ". [" + c.getUrgency() + "] "
-                    + "From: " + c.getSender()
-                    + " | About: " + c.getTarget());
+                    + "From: " + c.getSender().getFirstName() + " " + c.getSender().getLastName()
+                    + " | About: " + c.getTarget().getFirstName() + " " + c.getTarget().getLastName());
             System.out.println("   " + c.getDescription());
             System.out.println("   Filed: " + c.getCreatedAt());
         }

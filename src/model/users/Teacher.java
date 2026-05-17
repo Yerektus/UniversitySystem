@@ -46,8 +46,8 @@ public class Teacher extends Employee implements Researcher {
     public void sendComplaint(Student student, UrgencyLevel level) {
         Complaint complaint = new Complaint(
             java.util.UUID.randomUUID().toString(),
-            getFirstName(),
-            student.getFirstName(),
+            this,
+            student,
             "Complaint about student behavior",
             level,
             new Date()
