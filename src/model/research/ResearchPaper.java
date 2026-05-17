@@ -39,14 +39,38 @@ public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
     }
 
     public String getCitation(CitationFormat format) {
+        String authorNames = buildAuthorNames();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(datePublished);
+        int year = cal.get(java.util.Calendar.YEAR);
+
         switch (format) {
-            case APA:
-                return title + ". " + journal + ". doi:" + doi;
             case BIBTEX:
-                return "@article{" + doi + ", title={" + title + "}, journal={" + journal + "}}";
+                return "@article{" + doi + ",\n"
+                        + "  title   = {" + title + "},\n"
+                        + "  author  = {" + authorNames + "},\n"
+                        + "  journal = {" + journal + "},\n"
+                        + "  year    = {" + year + "},\n"
+                        + "  pages   = {" + pages + "},\n"
+                        + "  doi     = {" + doi + "}\n"
+                        + "}";
             default:
-                return title + " (" + journal + ")";
+                return authorNames + " (" + year + "). " + title + ". "
+                        + journal + ". " + pages + " pages. doi:" + doi;
         }
+    }
+
+    private String buildAuthorNames() {
+        if (authors.isEmpty()) return "Unknown";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < authors.size(); i++) {
+            if (authors.get(i) instanceof model.users.User) {
+                model.users.User u = (model.users.User) authors.get(i);
+                sb.append(u.getLastName()).append(", ").append(u.getFirstName().charAt(0)).append(".");
+            }
+            if (i < authors.size() - 1) sb.append("; ");
+        }
+        return sb.toString();
     }
 
     @Override
