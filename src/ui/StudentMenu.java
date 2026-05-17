@@ -2,12 +2,16 @@ package ui;
 
 import model.academic.Course;
 import model.academic.Enrollment;
+import model.academic.LessonGroup;
 import model.academic.Mark;
 import model.academic.StudentOrganization;
 import model.communication.News;
+import model.communication.Request;
 import model.users.Student;
 import model.users.Teacher;
+import model.users.User;
 import storage.DataStorage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -73,7 +77,6 @@ public class StudentMenu extends BaseMenu {
         System.out.printf("%-12s %d / %d%n", "Credits:", student.getTotalCredits(), Student.MAX_CREDITS);
         System.out.printf("%-12s %d%n", "Fail Count:", student.getFailCount());
         System.out.printf("%-12s %s%n", "Language:",  student.getLanguage());
-
     }
 
     private void viewAvailableCourses() {
@@ -91,7 +94,6 @@ public class StudentMenu extends BaseMenu {
                         c.getTargetYear(), c.getTargetMajor());
             }
         }
-
     }
 
     private void registerForCourse() {
@@ -108,11 +110,11 @@ public class StudentMenu extends BaseMenu {
         if (idx < 0 || idx >= courses.size()) { System.out.println("Cancelled."); return; }
         Course selected = courses.get(idx);
 
-        List<model.academic.LessonGroup> groups = new java.util.ArrayList<>();
-        for (model.academic.LessonGroup g : storage.getLessonGroups())
+        List<LessonGroup> groups = new ArrayList<>();
+        for (LessonGroup g : storage.getLessonGroups())
             if (g.getCourse().getCourseId().equals(selected.getCourseId())) groups.add(g);
 
-        model.academic.LessonGroup chosenGroup = null;
+        LessonGroup chosenGroup = null;
         if (groups.isEmpty()) {
             System.out.println("No lesson groups available for this course.");
             return;
@@ -121,7 +123,7 @@ public class StudentMenu extends BaseMenu {
         } else {
             System.out.println("Select lesson group:");
             for (int i = 0; i < groups.size(); i++) {
-                model.academic.LessonGroup g = groups.get(i);
+                LessonGroup g = groups.get(i);
                 System.out.println((i + 1) + ". " + g.getType() + " | "
                         + g.getDayOfWeek() + " " + g.getStartTime() + "-" + g.getEndTime()
                         + " | " + g.getRoom());
@@ -142,7 +144,7 @@ public class StudentMenu extends BaseMenu {
 
     private void dropCourse() {
         List<Enrollment> enrollments = student.getEnrollments();
-        List<Enrollment> active = new java.util.ArrayList<>();
+        List<Enrollment> active = new ArrayList<>();
         for (Enrollment e : enrollments) {
             if (e.isActive()) active.add(e);
         }
@@ -159,7 +161,6 @@ public class StudentMenu extends BaseMenu {
         if (idx < 0 || idx >= active.size()) { System.out.println("Cancelled."); return; }
 
         active.get(idx).drop();
-
     }
 
     private void viewEnrollments() {
@@ -180,7 +181,6 @@ public class StudentMenu extends BaseMenu {
                         e.isActive() ? "Active" : "Dropped");
             }
         }
-
     }
 
     private void viewMarks() {
@@ -201,7 +201,6 @@ public class StudentMenu extends BaseMenu {
                         m.isPassed() ? "Yes" : "No");
             }
         }
-
     }
 
     private void viewTranscript() {
@@ -228,7 +227,6 @@ public class StudentMenu extends BaseMenu {
                         e.getCourse().getName(), status, grade);
             }
         }
-
     }
 
     private void viewTeacherInfo() {
@@ -257,7 +255,6 @@ public class StudentMenu extends BaseMenu {
                         t.getDepartment());
             }
         }
-
     }
 
     private void viewOrganizations() {
@@ -276,7 +273,6 @@ public class StudentMenu extends BaseMenu {
                         isMember ? "[Member]" : "");
             }
         }
-
     }
 
     private void joinOrganization() {
@@ -303,7 +299,6 @@ public class StudentMenu extends BaseMenu {
         } else {
             student.joinOrganization(org);
         }
-
     }
 
     private void viewNews() {
@@ -326,7 +321,6 @@ public class StudentMenu extends BaseMenu {
                 System.out.println("  ---");
             }
         }
-
     }
 
     private void submitRequest() {
@@ -337,15 +331,15 @@ public class StudentMenu extends BaseMenu {
         String description = scanner.nextLine().trim();
 
         String id = "REQ" + System.currentTimeMillis();
-        model.communication.Request request = new model.communication.Request(id, topic, student, description);
+        Request request = new Request(id, topic, student, description);
         storage.saveRequest(request);
         System.out.println("Request submitted: " + topic);
     }
 
     private void rateTeacher() {
-        List<model.users.Teacher> teachers = new java.util.ArrayList<>();
-        for (model.users.User u : storage.getUsers().values())
-            if (u instanceof model.users.Teacher) teachers.add((model.users.Teacher) u);
+        List<Teacher> teachers = new ArrayList<>();
+        for (User u : storage.getUsers().values())
+            if (u instanceof Teacher) teachers.add((Teacher) u);
 
         if (teachers.isEmpty()) { System.out.println("No teachers found."); return; }
 
@@ -367,7 +361,7 @@ public class StudentMenu extends BaseMenu {
     }
 
     private void addCommentToNews() {
-        List<model.communication.News> newsList = storage.getNewsList();
+        List<News> newsList = storage.getNewsList();
         if (newsList.isEmpty()) { System.out.println("No news available."); return; }
 
         System.out.println("\n--- Add Comment to News ---");

@@ -43,7 +43,6 @@ public class TechSupportMenu extends BaseMenu {
         }
     }
 
-
     private void viewNewRequests() {
         List<Request> newRequests = new ArrayList<>();
         for (Request r : storage.getRequests())
@@ -61,9 +60,7 @@ public class TechSupportMenu extends BaseMenu {
             printRequest(r);
         }
         storage.updateAndSave();
-
     }
-
 
     private void viewAllRequests() {
         List<Request> all = storage.getRequests();
@@ -95,9 +92,7 @@ public class TechSupportMenu extends BaseMenu {
             }
         }
         if (count == 0) System.out.println("No requests with that status.");
-
     }
-
 
     private void processRequest() {
         List<Request> actionable = new ArrayList<>();
@@ -149,7 +144,6 @@ public class TechSupportMenu extends BaseMenu {
         storage.updateAndSave();
     }
 
-
     private void submitRequest() {
         System.out.println("\n--- Submit Tech Support Request ---");
         System.out.print("Topic (e.g. Fix projector, Fix printer): ");
@@ -162,7 +156,6 @@ public class TechSupportMenu extends BaseMenu {
         storage.saveRequest(request);
         System.out.println("Request submitted: " + topic);
     }
-
 
     private void printRequest(Request r) {
         System.out.println("ID     : " + r.getRequestId());

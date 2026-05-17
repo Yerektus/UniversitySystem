@@ -11,9 +11,9 @@ public class ConsoleUI {
     private final DataStorage storage = DataStorage.getInstance();
 
     public void start() {
-        System.out.println("");
-        System.out.println("     Welcome to University System");
-        System.out.println("");
+        System.out.println("==========================================");
+        System.out.println("       KBTU University System");
+        System.out.println("==========================================");
         while (true) {
             showMainMenu();
         }

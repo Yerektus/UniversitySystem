@@ -26,7 +26,6 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.println("\n--- Graduate Student Menu ["
                 + gradStudent.getFirstName() + " " + gradStudent.getLastName()
                 + " | " + gradStudent.getGraduateType() + "] ---");
-        System.out.println("--- Student options ---");
         System.out.println("1.  View profile");
         System.out.println("2.  View available courses");
         System.out.println("3.  Register for a course");
@@ -41,7 +40,6 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.println("12. Submit tech support request");
         System.out.println("13. Rate a teacher");
         System.out.println("14. Add comment to news");
-        System.out.println("--- Graduate options ---");
         System.out.println("15. View / set supervisor");
         System.out.println("16. Publish research paper");
         System.out.println("17. View my papers");
@@ -59,7 +57,6 @@ public class GraduateStudentMenu extends StudentMenu {
             default:   super.handleChoice(choice);
         }
     }
-
 
     private void viewSetSupervisor() {
         System.out.println("\n--- Supervisor ---");
@@ -112,7 +109,6 @@ public class GraduateStudentMenu extends StudentMenu {
         }
     }
 
-
     private void publishPaper() {
         System.out.println("\n--- Publish Research Paper ---");
         System.out.print("Title: ");
@@ -131,7 +127,6 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.println("Paper published and added to your diploma projects.");
     }
 
-
     private void viewPapers() {
         if (gradStudent.getPapers().isEmpty()) {
             System.out.println("No papers published yet.");
@@ -146,9 +141,7 @@ public class GraduateStudentMenu extends StudentMenu {
             case "3": gradStudent.printPapers(ResearchPaper.BY_LENGTH);    break;
             default:  gradStudent.printPapers(ResearchPaper.BY_DATE);      break;
         }
-
     }
-
 
     private void researchProjects() {
         System.out.println("\n--- Research Projects ---");

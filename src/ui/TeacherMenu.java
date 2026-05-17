@@ -277,10 +277,10 @@ public class TeacherMenu extends BaseMenu {
     }
 
     private void viewInbox() {
-        List<model.communication.Message> inbox = storage.getMessagesForUser(teacher);
+        List<Message> inbox = storage.getMessagesForUser(teacher);
         System.out.println("\n--- Inbox (" + inbox.size() + ") ---");
         if (inbox.isEmpty()) { System.out.println("No messages."); return; }
-        for (model.communication.Message m : inbox) {
+        for (Message m : inbox) {
             System.out.println("From   : " + m.getSender().getFirstName() + " " + m.getSender().getLastName());
             System.out.println("Topic  : " + m.getTopic());
             System.out.println("Message: " + m.getContent());
