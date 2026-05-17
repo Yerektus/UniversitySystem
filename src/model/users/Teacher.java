@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class Teacher extends Employee implements Researcher {
 
-	private static final long serialVersionUID = 1L;
 	private TeacherPosition position;
     private List<ResearchPaper> papers;
 
@@ -45,7 +45,7 @@ public class Teacher extends Employee implements Researcher {
 
     public void sendComplaint(Student student, UrgencyLevel level) {
         Complaint complaint = new Complaint(
-            java.util.UUID.randomUUID().toString(),
+            UUID.randomUUID().toString(),
             this,
             student,
             "Complaint about student behavior",

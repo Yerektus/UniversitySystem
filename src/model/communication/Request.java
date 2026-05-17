@@ -7,7 +7,6 @@ import java.util.Date;
 
 public class Request implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String requestId;
     private String topic;
     private User sender;

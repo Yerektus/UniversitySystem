@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 public abstract class User implements Serializable, JournalObserver {
 
-    private static final long serialVersionUID = 1L;
     private String id;
     private String password;
     private String firstName;

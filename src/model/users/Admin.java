@@ -7,7 +7,6 @@ import storage.ActionLogger;
 
 public class Admin extends Employee {
 
-	private static final long serialVersionUID = 1L;
 
 	public Admin(String id, String password, String firstName, String lastName,
                  String email, Language language, String department) {

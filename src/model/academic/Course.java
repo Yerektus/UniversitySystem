@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Course implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String courseId;
     private String name;
     private int credits;

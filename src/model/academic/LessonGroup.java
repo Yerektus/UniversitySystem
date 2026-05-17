@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class LessonGroup implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String groupId;
     private Course course;
     private LessonType type;

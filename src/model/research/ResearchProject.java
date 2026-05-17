@@ -8,7 +8,6 @@ import java.util.List;
 
 public class ResearchProject implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String projectId;
     private String topic;
     private List<ResearchPaper> publishedPapers;

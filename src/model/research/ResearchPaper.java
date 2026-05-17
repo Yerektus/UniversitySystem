@@ -1,15 +1,16 @@
 package model.research;
 
 import model.enums.CitationFormat;
+import model.users.User;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
 
-	private static final long serialVersionUID = 1L;
 
     public static final Comparator<ResearchPaper> BY_CITATIONS =
             Comparator.comparingInt(ResearchPaper::getCitations).reversed();
@@ -40,9 +41,9 @@ public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
 
     public String getCitation(CitationFormat format) {
         String authorNames = buildAuthorNames();
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.setTime(datePublished);
-        int year = cal.get(java.util.Calendar.YEAR);
+        int year = cal.get(Calendar.YEAR);
 
         switch (format) {
             case BIBTEX:
@@ -64,8 +65,8 @@ public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
         if (authors.isEmpty()) return "Unknown";
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < authors.size(); i++) {
-            if (authors.get(i) instanceof model.users.User) {
-                model.users.User u = (model.users.User) authors.get(i);
+            if (authors.get(i) instanceof User) {
+                User u = (User) authors.get(i);
                 sb.append(u.getLastName()).append(", ").append(u.getFirstName().charAt(0)).append(".");
             }
             if (i < authors.size() - 1) sb.append("; ");

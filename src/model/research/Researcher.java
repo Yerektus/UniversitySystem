@@ -1,8 +1,8 @@
 package model.research;
- 
+
 import java.util.Comparator;
 import java.util.List;
- 
+
 public interface Researcher {
     List<ResearchPaper> getPapers();
     int calculateHindex();

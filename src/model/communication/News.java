@@ -8,7 +8,6 @@ import java.util.List;
 
 public class News implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String newsId;
     private String title;
     private String content;

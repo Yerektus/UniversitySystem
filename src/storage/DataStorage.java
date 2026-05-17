@@ -13,6 +13,7 @@ import model.enums.*;
 import model.research.Journal;
 import model.research.ResearchPaper;
 import model.research.ResearchProject;
+import model.research.Researcher;
 import model.users.*;
 
 import java.io.*;
@@ -62,7 +63,6 @@ public class DataStorage {
         }
         return instance;
     }
-
 
     public static void serialize(Object obj, String fileName) {
         try (ObjectOutputStream oos = new ObjectOutputStream(
@@ -126,7 +126,6 @@ public class DataStorage {
         serialize(complaints,       "complaints");
     }
 
-
     public void save(Object object) {
         if (object instanceof User) {
             users.put(((User) object).getId(), (User) object);
@@ -159,12 +158,12 @@ public class DataStorage {
     }
 
     private void updateTopCitedResearcherNews() {
-        model.research.Researcher topResearcher = null;
+        Researcher topResearcher = null;
         int maxCitations = 0;
         for (User u : users.values()) {
-            if (u instanceof model.research.Researcher) {
-                model.research.Researcher r = (model.research.Researcher) u;
-                int total = r.getPapers().stream().mapToInt(model.research.ResearchPaper::getCitations).sum();
+            if (u instanceof Researcher) {
+                Researcher r = (Researcher) u;
+                int total = r.getPapers().stream().mapToInt(ResearchPaper::getCitations).sum();
                 if (total > maxCitations) { maxCitations = total; topResearcher = r; }
             }
         }
@@ -199,7 +198,6 @@ public class DataStorage {
         return result;
     }
 
-
     public Map<String, User>           getUsers()         { return users; }
     public List<Course>                getCourses()       { return courses; }
     public List<Journal>               getJournals()      { return journals; }
@@ -218,7 +216,6 @@ public class DataStorage {
             if (m.getReceiver().getId().equals(user.getId())) result.add(m);
         return result;
     }
-
 
     private void seedData() {
         Admin admin = new Admin(

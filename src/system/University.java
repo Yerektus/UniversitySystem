@@ -1,5 +1,6 @@
 package system;
 
+import model.enums.CitationFormat;
 import model.enums.SchoolCode;
 import model.research.ResearchPaper;
 import model.research.Researcher;
@@ -8,6 +9,7 @@ import storage.DataStorage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 public class University {
@@ -96,16 +98,15 @@ public class University {
                 + " | h-index: " + top.calculateHindex());
     }
 
-    public void printAllResearcherPapers(java.util.Comparator<ResearchPaper> comparator) {
+    public void printAllResearcherPapers(Comparator<ResearchPaper> comparator) {
         List<ResearchPaper> allPapers = new ArrayList<>();
         for (User u : DataStorage.getInstance().getUsers().values())
             if (u instanceof Researcher)
                 allPapers.addAll(((Researcher) u).getPapers());
-
         if (allPapers.isEmpty()) { System.out.println("No research papers found."); return; }
         allPapers.sort(comparator);
         System.out.println("--- All Research Papers (" + allPapers.size() + ") ---");
         for (ResearchPaper p : allPapers)
-            System.out.println(p.getCitation(model.enums.CitationFormat.PLAIN_TEXT));
+            System.out.println(p.getCitation(CitationFormat.PLAIN_TEXT));
     }
 }

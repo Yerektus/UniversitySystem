@@ -11,7 +11,6 @@ import java.util.List;
 
 public class Student extends User {
 
-	private static final long serialVersionUID = 1L;
 	public static final int MAX_CREDITS = 21;
     public static final int MAX_FAILS = 3;
     private String major;

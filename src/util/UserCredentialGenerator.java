@@ -1,6 +1,7 @@
 package util;
 
 import model.enums.SchoolCode;
+import model.users.User;
 import storage.DataStorage;
 
 import java.time.Year;
@@ -41,7 +42,7 @@ public class UserCredentialGenerator {
 
     private static String generateSequential(String prefix) {
         Set<String> existingIds = new HashSet<>();
-        for (model.users.User u : DataStorage.getInstance().getUsers().values())
+        for (User u : DataStorage.getInstance().getUsers().values())
             existingIds.add(u.getId());
 
         for (int n = 1; n <= 9999; n++) {
@@ -56,7 +57,7 @@ public class UserCredentialGenerator {
         String cleanLast  = clean(lastName);
 
         Set<String> existingEmails = new HashSet<>();
-        for (model.users.User u : DataStorage.getInstance().getUsers().values())
+        for (User u : DataStorage.getInstance().getUsers().values())
             existingEmails.add(u.getEmail().toLowerCase());
 
         for (int len = 1; len <= cleanFirst.length(); len++) {

@@ -7,7 +7,6 @@ import java.util.Date;
 
 public class Enrollment implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String enrollmentId;
     private Student student;
     private Course course;
