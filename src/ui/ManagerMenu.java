@@ -24,52 +24,127 @@ public class ManagerMenu extends BaseMenu {
     @Override
     protected void printMenu() {
         System.out.println("\n--- Manager Menu [" + manager.getFirstName() + " " + manager.getLastName() + "] ---");
-        System.out.println("1.  View profile");
-        System.out.println("2.  Create new user account");
-        System.out.println("3.  Assign course to teacher");
-        System.out.println("4.  Approve student course registration");
-        System.out.println("5.  Add course for registration");
-        System.out.println("6.  Manage news");
-        System.out.println("7.  View students");
-        System.out.println("8.  View teachers");
-        System.out.println("9.  Academic performance report");
-        System.out.println("10. Print all researchers' papers");
-        System.out.println("11. Top cited researcher (university)");
-        System.out.println("12. Top cited researcher by year");
-        System.out.println("13. Top cited researcher by school");
-        System.out.println("14. View complaints");
-        System.out.println("0.  Logout");
+        System.out.println("1. View profile");
+        System.out.println("2. Create user account");
+        System.out.println("3. Courses");
+        System.out.println("4. Students & Teachers");
+        System.out.println("5. News");
+        System.out.println("6. Research");
+        System.out.println("7. Reports");
+        System.out.println("0. Logout");
     }
 
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1":  viewProfile();            break;
-            case "2":  createUserAccount();      break;
-            case "3":  assignCourseToTeacher();  break;
-            case "4":  approveRegistration();    break;
-            case "5":  addCourseForRegistration(); break;
-            case "6":  manageNews();             break;
-            case "7":  viewStudents();           break;
-            case "8":  viewTeachers();           break;
-            case "9":  academicReport();              break;
-            case "10": printAllResearchPapers();      break;
-            case "11": topCitedUniversity();          break;
-            case "12": topCitedByYear();              break;
-            case "13": topCitedBySchool();            break;
-            case "14": viewComplaints();               break;
-            case "0":  logout();                      break;
-            default:   System.out.println("Invalid choice.");
+            case "1": viewProfile();       break;
+            case "2": createUserAccount(); break;
+            case "3": coursesMenu();       break;
+            case "4": peopleMenu();        break;
+            case "5": newsMenu();          break;
+            case "6": researchMenu();      break;
+            case "7": reportsMenu();       break;
+            case "0": logout();            break;
+            default:  System.out.println("Invalid choice.");
         }
     }
 
     private void viewProfile() {
         System.out.println("\n--- Profile ---");
-        System.out.printf("%-10s %s %s%n", "Name:",     manager.getFirstName(), manager.getLastName());
-        System.out.printf("%-10s %s%n",    "Email:",    manager.getEmail());
-        System.out.printf("%-10s %s%n",    "Dept:",     manager.getDepartment());
-        System.out.printf("%-10s %s%n",    "Type:",     manager.getType());
-        System.out.printf("%-10s %s%n",    "Language:", manager.getLanguage());
+        System.out.printf("%-10s %s%n", "ID:",       manager.getId());
+        System.out.printf("%-10s %s %s%n", "Name:",  manager.getFirstName(), manager.getLastName());
+        System.out.printf("%-10s %s%n", "Email:",    manager.getEmail());
+        System.out.printf("%-10s %s%n", "Dept:",     manager.getDepartment());
+        System.out.printf("%-10s %s%n", "Type:",     manager.getType());
+        System.out.printf("%-10s %s%n", "Language:", manager.getLanguage());
+    }
+
+    private void coursesMenu() {
+        while (true) {
+            System.out.println("\n--- Manager Menu: Courses ---");
+            System.out.println("1. Assign course to teacher");
+            System.out.println("2. Add course for registration");
+            System.out.println("3. Approve student registration");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": assignCourseToTeacher();    break;
+                case "2": addCourseForRegistration(); break;
+                case "3": approveRegistration();      break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void peopleMenu() {
+        while (true) {
+            System.out.println("\n--- Manager Menu: Students & Teachers ---");
+            System.out.println("1. View students");
+            System.out.println("2. View teachers");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewStudents(); break;
+                case "2": viewTeachers(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void newsMenu() {
+        while (true) {
+            System.out.println("\n--- Manager Menu: News ---");
+            System.out.println("1. View all news");
+            System.out.println("2. Create news");
+            System.out.println("3. Delete news");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewNews();   break;
+                case "2": createNews(); break;
+                case "3": deleteNews(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void researchMenu() {
+        while (true) {
+            System.out.println("\n--- Manager Menu: Research ---");
+            System.out.println("1. Print all researchers' papers");
+            System.out.println("2. Top cited researcher (university)");
+            System.out.println("3. Top cited researcher by year");
+            System.out.println("4. Top cited researcher by school");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": printAllResearchPapers(); break;
+                case "2": topCitedUniversity();     break;
+                case "3": topCitedByYear();          break;
+                case "4": topCitedBySchool();        break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void reportsMenu() {
+        while (true) {
+            System.out.println("\n--- Manager Menu: Reports ---");
+            System.out.println("1. Academic performance report");
+            System.out.println("2. View complaints");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": academicReport();  break;
+                case "2": viewComplaints();  break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
     }
 
     private void createUserAccount() {
@@ -78,8 +153,10 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("2. Graduate Student");
         System.out.println("3. Teacher");
         System.out.println("4. Tech Support Specialist");
+        System.out.println("0. Cancel");
         System.out.print("Role: ");
         String role = scanner.nextLine().trim();
+        if (role.equals("0")) return;
 
         System.out.print("First name: ");
         String firstName = scanner.nextLine().trim();
@@ -149,6 +226,7 @@ public class ManagerMenu extends BaseMenu {
 
         storage.save(user);
         System.out.println("Account created.");
+        System.out.println("  ID      : " + user.getId());
         System.out.println("  Email   : " + email);
         System.out.println("  Password: " + password);
     }
@@ -161,17 +239,17 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("\n--- Select Course ---");
         for (int i = 0; i < courses.size(); i++)
             System.out.println((i + 1) + ". " + courses.get(i).getCourseId() + " - " + courses.get(i).getName());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int ci = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (ci < 0 || ci >= courses.size()) { System.out.println("Invalid."); return; }
+        if (ci < 0 || ci >= courses.size()) { System.out.println("Cancelled."); return; }
 
         System.out.println("\n--- Select Teacher ---");
         for (int i = 0; i < teachers.size(); i++)
             System.out.println((i + 1) + ". " + teachers.get(i).getFirstName()
                     + " " + teachers.get(i).getLastName() + " [" + teachers.get(i).getPosition() + "]");
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int ti = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (ti < 0 || ti >= teachers.size()) { System.out.println("Invalid."); return; }
+        if (ti < 0 || ti >= teachers.size()) { System.out.println("Cancelled."); return; }
 
         System.out.println("Assign as: 1. Lecturer  2. Practice instructor");
         System.out.print("Choice: ");
@@ -195,16 +273,16 @@ public class ManagerMenu extends BaseMenu {
         for (int i = 0; i < students.size(); i++)
             System.out.println((i + 1) + ". " + students.get(i).getFirstName()
                     + " " + students.get(i).getLastName() + " | Credits: " + students.get(i).getTotalCredits());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int si = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (si < 0 || si >= students.size()) { System.out.println("Invalid."); return; }
+        if (si < 0 || si >= students.size()) { System.out.println("Cancelled."); return; }
 
         System.out.println("\n--- Select Course ---");
         for (int i = 0; i < courses.size(); i++)
             System.out.println((i + 1) + ". " + courses.get(i).getName() + " (" + courses.get(i).getCredits() + " credits)");
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int ci = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (ci < 0 || ci >= courses.size()) { System.out.println("Invalid."); return; }
+        if (ci < 0 || ci >= courses.size()) { System.out.println("Cancelled."); return; }
 
         Student student = students.get(si);
         Course course = courses.get(ci);
@@ -217,9 +295,11 @@ public class ManagerMenu extends BaseMenu {
 
     private void addCourseForRegistration() {
         System.out.println("\n--- Add Course ---");
-        System.out.print("Course ID: ");   String id    = scanner.nextLine().trim();
-        System.out.print("Name: ");        String name  = scanner.nextLine().trim();
-        System.out.print("Credits: ");     int credits  = parseIntSafe(scanner.nextLine().trim(), 3);
+        System.out.print("Course ID (0 to cancel): ");
+        String id = scanner.nextLine().trim();
+        if (id.equals("0")) return;
+        System.out.print("Name: ");        String name    = scanner.nextLine().trim();
+        System.out.print("Credits: ");     int credits    = parseIntSafe(scanner.nextLine().trim(), 3);
         System.out.println("Type: 1. MAJOR  2. MINOR  3. FREE_ELECTIVE");
         System.out.print("Choice: ");
         CourseType type;
@@ -238,20 +318,6 @@ public class ManagerMenu extends BaseMenu {
         System.out.println("Course '" + name + "' added.");
     }
 
-    private void manageNews() {
-        System.out.println("\n--- News Management ---");
-        System.out.println("1. View all news");
-        System.out.println("2. Create news");
-        System.out.println("3. Delete news");
-        System.out.print("Choice: ");
-        switch (scanner.nextLine().trim()) {
-            case "1": viewNews();   break;
-            case "2": createNews(); break;
-            case "3": deleteNews(); break;
-            default:  System.out.println("Invalid.");
-        }
-    }
-
     private void viewNews() {
         List<News> newsList = storage.getNewsList();
         if (newsList.isEmpty()) { System.out.println("No news."); return; }
@@ -263,7 +329,9 @@ public class ManagerMenu extends BaseMenu {
     }
 
     private void createNews() {
-        System.out.print("Title: ");   String title   = scanner.nextLine().trim();
+        System.out.print("Title (0 to cancel): ");
+        String title = scanner.nextLine().trim();
+        if (title.equals("0")) return;
         System.out.print("Content: "); String content = scanner.nextLine().trim();
         System.out.print("Topic: ");   String topic   = scanner.nextLine().trim();
 
@@ -281,9 +349,9 @@ public class ManagerMenu extends BaseMenu {
         if (newsList.isEmpty()) { System.out.println("No news to delete."); return; }
         for (int i = 0; i < newsList.size(); i++)
             System.out.println((i + 1) + ". " + newsList.get(i).getTitle());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (idx < 0 || idx >= newsList.size()) { System.out.println("Invalid."); return; }
+        if (idx < 0 || idx >= newsList.size()) { System.out.println("Cancelled."); return; }
         System.out.println("Deleted: " + newsList.remove(idx).getTitle());
         storage.updateAndSave();
     }
@@ -298,10 +366,10 @@ public class ManagerMenu extends BaseMenu {
         else students.sort(Comparator.comparing(Student::getLastName));
 
         System.out.println("\n--- Students ---");
-        System.out.printf("%-20s %-20s %-15s %-6s %-6s%n", "First", "Last", "Major", "Year", "GPA");
+        System.out.printf("%-12s %-20s %-20s %-15s %-6s %-6s%n", "ID", "First", "Last", "Major", "Year", "GPA");
         for (Student s : students)
-            System.out.printf("%-20s %-20s %-15s %-6d %-6.2f%n",
-                    s.getFirstName(), s.getLastName(), s.getMajor(), s.getYear(), s.getGpa());
+            System.out.printf("%-12s %-20s %-20s %-15s %-6d %-6.2f%n",
+                    s.getId(), s.getFirstName(), s.getLastName(), s.getMajor(), s.getYear(), s.getGpa());
     }
 
     private void viewTeachers() {
@@ -309,10 +377,10 @@ public class ManagerMenu extends BaseMenu {
         if (teachers.isEmpty()) { System.out.println("No teachers."); return; }
         teachers.sort(Comparator.comparing(Teacher::getLastName));
         System.out.println("\n--- Teachers ---");
-        System.out.printf("%-20s %-20s %-15s %-12s%n", "First", "Last", "Department", "Position");
+        System.out.printf("%-12s %-20s %-20s %-15s %-12s%n", "ID", "First", "Last", "Department", "Position");
         for (Teacher t : teachers)
-            System.out.printf("%-20s %-20s %-15s %-12s%n",
-                    t.getFirstName(), t.getLastName(), t.getDepartment(), t.getPosition());
+            System.out.printf("%-12s %-20s %-20s %-15s %-12s%n",
+                    t.getId(), t.getFirstName(), t.getLastName(), t.getDepartment(), t.getPosition());
     }
 
     private void academicReport() {
@@ -323,11 +391,11 @@ public class ManagerMenu extends BaseMenu {
         for (Mark m : marks) { total += m.getTotalMark(); if (m.isPassed()) passed++; else failed++; }
 
         System.out.println("\n--- Academic Performance Report ---");
-        System.out.printf("%-25s %d%n",   "Total marks:",    marks.size());
-        System.out.printf("%-25s %d%n",   "Passed:",         passed);
-        System.out.printf("%-25s %d%n",   "Failed:",         failed);
-        System.out.printf("%-25s %.2f%n", "Average:",        total / marks.size());
-        System.out.printf("%-25s %.1f%%%n","Pass rate:",      (passed * 100.0 / marks.size()));
+        System.out.printf("%-25s %d%n",    "Total marks:",  marks.size());
+        System.out.printf("%-25s %d%n",    "Passed:",       passed);
+        System.out.printf("%-25s %d%n",    "Failed:",       failed);
+        System.out.printf("%-25s %.2f%n",  "Average:",      total / marks.size());
+        System.out.printf("%-25s %.1f%%%n", "Pass rate:",   (passed * 100.0 / marks.size()));
 
         Map<String, List<Mark>> byCourse = new LinkedHashMap<>();
         for (Mark m : marks)
@@ -360,7 +428,7 @@ public class ManagerMenu extends BaseMenu {
     private void printAllResearchPapers() {
         System.out.println("Sort by: 1. Citations  2. Date  3. Length");
         System.out.print("Choice: ");
-        java.util.Comparator<ResearchPaper> comparator;
+        Comparator<ResearchPaper> comparator;
         switch (scanner.nextLine().trim()) {
             case "1": comparator = ResearchPaper.BY_CITATIONS; break;
             case "3": comparator = ResearchPaper.BY_LENGTH;    break;
@@ -375,8 +443,10 @@ public class ManagerMenu extends BaseMenu {
     }
 
     private void topCitedByYear() {
-        System.out.print("Enter year: ");
-        int year = parseIntSafe(scanner.nextLine().trim(), java.time.Year.now().getValue());
+        System.out.print("Enter year (0 to cancel): ");
+        String input = scanner.nextLine().trim();
+        if (input.equals("0")) return;
+        int year = parseIntSafe(input, java.time.Year.now().getValue());
         System.out.println("\n--- Top Cited Researcher in " + year + " ---");
         University.getInstance().printTopCitedResearcherByYear(year);
     }
@@ -386,9 +456,9 @@ public class ManagerMenu extends BaseMenu {
         SchoolCode[] values = SchoolCode.values();
         for (int i = 0; i < values.length; i++)
             System.out.println((i + 1) + ". " + values[i].getDisplayName());
-        System.out.print("Choice: ");
-        int idx = parseIntSafe(scanner.nextLine().trim(), 3) - 1;
-        if (idx < 0 || idx >= values.length) idx = 2;
+        System.out.print("Choice (0 to cancel): ");
+        int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
+        if (idx < 0 || idx >= values.length) { System.out.println("Cancelled."); return; }
         University.getInstance().printTopCitedResearcherBySchool(values[idx]);
     }
 

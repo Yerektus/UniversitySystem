@@ -31,16 +31,13 @@ public class TeacherMenu extends BaseMenu {
 
     @Override
     protected void printMenu() {
-        System.out.println("\n--- Teacher Menu [" + teacher.getFirstName() + " " + teacher.getLastName() + "] ---");
+        System.out.println("\n--- Teacher Menu [" + teacher.getFirstName() + " " + teacher.getLastName()
+                + " | " + teacher.getPosition() + "] ---");
         System.out.println("1. View profile");
-        System.out.println("2. View my courses");
-        System.out.println("3. Put / update marks");
-        System.out.println("4. View students in a course");
-        System.out.println("5. Send complaint about a student");
-        System.out.println("6. Send message to employee");
+        System.out.println("2. Courses");
+        System.out.println("3. Communication");
         if (teacher.getPosition() == TeacherPosition.PROFESSOR)
-            System.out.println("7. Research papers");
-        System.out.println("8. View inbox");
+            System.out.println("4. Research");
         System.out.println("0. Logout");
     }
 
@@ -48,16 +45,12 @@ public class TeacherMenu extends BaseMenu {
     protected void handleChoice(String choice) {
         switch (choice) {
             case "1": viewProfile();   break;
-            case "2": viewCourses();   break;
-            case "3": putMarks();      break;
-            case "4": viewStudents();  break;
-            case "5": sendComplaint(); break;
-            case "6": sendMessage();   break;
-            case "7":
+            case "2": coursesMenu();   break;
+            case "3": commMenu();      break;
+            case "4":
                 if (teacher.getPosition() == TeacherPosition.PROFESSOR) researchMenu();
                 else System.out.println("Invalid choice.");
                 break;
-            case "8": viewInbox(); break;
             case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
@@ -65,6 +58,7 @@ public class TeacherMenu extends BaseMenu {
 
     private void viewProfile() {
         System.out.println("\n--- Profile ---");
+        System.out.printf("%-10s %s%n",    "ID:",       teacher.getId());
         System.out.printf("%-10s %s %s%n", "Name:",     teacher.getFirstName(), teacher.getLastName());
         System.out.printf("%-10s %s%n",    "Email:",    teacher.getEmail());
         System.out.printf("%-10s %s%n",    "Dept:",     teacher.getDepartment());
@@ -73,6 +67,58 @@ public class TeacherMenu extends BaseMenu {
         if (teacher.getPosition() == TeacherPosition.PROFESSOR) {
             System.out.printf("%-10s %d%n", "H-index:", teacher.calculateHindex());
             System.out.printf("%-10s %d%n", "Papers:",  teacher.getPapers().size());
+        }
+    }
+
+    private void coursesMenu() {
+        while (true) {
+            System.out.println("\n--- Teacher Menu: Courses ---");
+            System.out.println("1. View my courses");
+            System.out.println("2. Put / update marks");
+            System.out.println("3. View students in a course");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewCourses();  break;
+                case "2": putMarks();     break;
+                case "3": viewStudents(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void commMenu() {
+        while (true) {
+            System.out.println("\n--- Teacher Menu: Communication ---");
+            System.out.println("1. Send complaint about a student");
+            System.out.println("2. Send message to employee");
+            System.out.println("3. View inbox");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": sendComplaint(); break;
+                case "2": sendMessage();   break;
+                case "3": viewInbox();     break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void researchMenu() {
+        while (true) {
+            System.out.println("\n--- Teacher Menu: Research ---");
+            System.out.println("1. View my papers");
+            System.out.println("2. Publish new paper");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewPapers();   break;
+                case "2": publishPaper(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
         }
     }
 
@@ -100,9 +146,9 @@ public class TeacherMenu extends BaseMenu {
         System.out.println("\n--- Select Course ---");
         for (int i = 0; i < myCourses.size(); i++)
             System.out.println((i + 1) + ". " + myCourses.get(i).getName());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int ci = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (ci < 0 || ci >= myCourses.size()) { System.out.println("Invalid."); return; }
+        if (ci < 0 || ci >= myCourses.size()) { System.out.println("Cancelled."); return; }
         Course course = myCourses.get(ci);
 
         List<Student> students = course.getEnrolledStudents();
@@ -111,16 +157,15 @@ public class TeacherMenu extends BaseMenu {
         System.out.println("\n--- Select Student ---");
         for (int i = 0; i < students.size(); i++)
             System.out.println((i + 1) + ". " + students.get(i).getFirstName() + " " + students.get(i).getLastName());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int si = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (si < 0 || si >= students.size()) { System.out.println("Invalid."); return; }
+        if (si < 0 || si >= students.size()) { System.out.println("Cancelled."); return; }
         Student student = students.get(si);
 
         Mark mark = null;
         for (Mark m : storage.getMarks())
             if (m.getStudent().getId().equals(student.getId())
                     && m.getCourse().getCourseId().equals(course.getCourseId())) { mark = m; break; }
-
         if (mark == null) {
             mark = new Mark(student, course, getLessonGroupForCourse(course));
             storage.saveMark(mark);
@@ -155,29 +200,30 @@ public class TeacherMenu extends BaseMenu {
         System.out.println("\n--- Select Course ---");
         for (int i = 0; i < myCourses.size(); i++)
             System.out.println((i + 1) + ". " + myCourses.get(i).getName());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int ci = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (ci < 0 || ci >= myCourses.size()) { System.out.println("Invalid."); return; }
+        if (ci < 0 || ci >= myCourses.size()) { System.out.println("Cancelled."); return; }
         Course course = myCourses.get(ci);
 
         List<Student> students = course.getEnrolledStudents();
         if (students.isEmpty()) { System.out.println("No students enrolled."); return; }
 
         System.out.println("\n--- Students in " + course.getName() + " ---");
-        System.out.printf("%-20s %-20s %-6s %-6s %-6s %-8s%n", "First", "Last", "1st", "2nd", "Final", "Total");
+        System.out.printf("%-12s %-20s %-20s %-6s %-6s %-6s %-8s%n",
+                "ID", "First", "Last", "1st", "2nd", "Final", "Total");
         for (Student s : students) {
             Mark mark = null;
             for (Mark m : storage.getMarks())
                 if (m.getStudent().getId().equals(s.getId())
                         && m.getCourse().getCourseId().equals(course.getCourseId())) mark = m;
             if (mark != null)
-                System.out.printf("%-20s %-20s %-6.1f %-6.1f %-6.1f %-8.1f%n",
-                        s.getFirstName(), s.getLastName(),
+                System.out.printf("%-12s %-20s %-20s %-6.1f %-6.1f %-6.1f %-8.1f%n",
+                        s.getId(), s.getFirstName(), s.getLastName(),
                         mark.getFirstAttestation(), mark.getSecondAttestation(),
                         mark.getFinalExam(), mark.getTotalMark());
             else
-                System.out.printf("%-20s %-20s %-6s %-6s %-6s %-8s%n",
-                        s.getFirstName(), s.getLastName(), "-", "-", "-", "-");
+                System.out.printf("%-12s %-20s %-20s %-6s %-6s %-6s %-8s%n",
+                        s.getId(), s.getFirstName(), s.getLastName(), "-", "-", "-", "-");
         }
     }
 
@@ -190,9 +236,9 @@ public class TeacherMenu extends BaseMenu {
         System.out.println("\n--- Select Student ---");
         for (int i = 0; i < allStudents.size(); i++)
             System.out.println((i + 1) + ". " + allStudents.get(i).getFirstName() + " " + allStudents.get(i).getLastName());
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int si = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (si < 0 || si >= allStudents.size()) { System.out.println("Invalid."); return; }
+        if (si < 0 || si >= allStudents.size()) { System.out.println("Cancelled."); return; }
         Student student = allStudents.get(si);
 
         System.out.println("Urgency: 1. LOW  2. MEDIUM  3. HIGH");
@@ -225,30 +271,29 @@ public class TeacherMenu extends BaseMenu {
             System.out.println((i + 1) + ". " + employees.get(i).getFirstName()
                     + " " + employees.get(i).getLastName()
                     + " (" + employees.get(i).getClass().getSimpleName() + ")");
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (idx < 0 || idx >= employees.size()) { System.out.println("Invalid."); return; }
+        if (idx < 0 || idx >= employees.size()) { System.out.println("Cancelled."); return; }
         Employee recipient = employees.get(idx);
 
-        System.out.print("Topic: ");
-        String topic = scanner.nextLine().trim();
-        System.out.print("Message: ");
-        String content = scanner.nextLine().trim();
+        System.out.print("Topic: ");   String topic   = scanner.nextLine().trim();
+        System.out.print("Message: "); String content = scanner.nextLine().trim();
 
         Message msg = new Message(UUID.randomUUID().toString(), topic, content, teacher, recipient);
         storage.saveMessage(msg);
         System.out.println("Message sent to " + recipient.getFirstName() + " " + recipient.getLastName());
     }
 
-    private void researchMenu() {
-        System.out.println("\n--- Research ---");
-        System.out.println("1. View my papers");
-        System.out.println("2. Publish new paper");
-        System.out.print("Choice: ");
-        switch (scanner.nextLine().trim()) {
-            case "1": viewPapers();   break;
-            case "2": publishPaper(); break;
-            default:  System.out.println("Invalid.");
+    private void viewInbox() {
+        List<Message> inbox = storage.getMessagesForUser(teacher);
+        System.out.println("\n--- Inbox (" + inbox.size() + ") ---");
+        if (inbox.isEmpty()) { System.out.println("No messages."); return; }
+        for (Message m : inbox) {
+            System.out.println("From   : " + m.getSender().getFirstName() + " " + m.getSender().getLastName());
+            System.out.println("Topic  : " + m.getTopic());
+            System.out.println("Message: " + m.getContent());
+            System.out.println("Sent   : " + m.getSentAt());
+            System.out.println("---");
         }
     }
 
@@ -264,7 +309,9 @@ public class TeacherMenu extends BaseMenu {
     }
 
     private void publishPaper() {
-        System.out.print("Title: ");   String title   = scanner.nextLine().trim();
+        System.out.print("Title (0 to cancel): ");
+        String title = scanner.nextLine().trim();
+        if (title.equals("0")) return;
         System.out.print("Journal: "); String journal = scanner.nextLine().trim();
         System.out.print("Pages: ");   int pages      = parseIntSafe(scanner.nextLine().trim(), 1);
         System.out.print("DOI: ");     String doi     = scanner.nextLine().trim();
@@ -274,19 +321,6 @@ public class TeacherMenu extends BaseMenu {
         teacher.publishPaper(paper);
         storage.updateAndSave();
         System.out.println("Paper published.");
-    }
-
-    private void viewInbox() {
-        List<Message> inbox = storage.getMessagesForUser(teacher);
-        System.out.println("\n--- Inbox (" + inbox.size() + ") ---");
-        if (inbox.isEmpty()) { System.out.println("No messages."); return; }
-        for (Message m : inbox) {
-            System.out.println("From   : " + m.getSender().getFirstName() + " " + m.getSender().getLastName());
-            System.out.println("Topic  : " + m.getTopic());
-            System.out.println("Message: " + m.getContent());
-            System.out.println("Sent   : " + m.getSentAt());
-            System.out.println("---");
-        }
     }
 
     private List<Course> getTeacherCourses() {

@@ -26,35 +26,40 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.println("\n--- Graduate Student Menu ["
                 + gradStudent.getFirstName() + " " + gradStudent.getLastName()
                 + " | " + gradStudent.getGraduateType() + "] ---");
-        System.out.println("1.  View profile");
-        System.out.println("2.  View available courses");
-        System.out.println("3.  Register for a course");
-        System.out.println("4.  Drop a course");
-        System.out.println("5.  View my enrollments");
-        System.out.println("6.  View my marks");
-        System.out.println("7.  View transcript");
-        System.out.println("8.  View teacher info");
-        System.out.println("9.  View student organizations");
-        System.out.println("10. Join a student organization");
-        System.out.println("11. View news");
-        System.out.println("12. Submit tech support request");
-        System.out.println("13. Rate a teacher");
-        System.out.println("14. Add comment to news");
-        System.out.println("15. View / set supervisor");
-        System.out.println("16. Publish research paper");
-        System.out.println("17. View my papers");
-        System.out.println("18. View / join research projects");
-        System.out.println("0.  Logout");
+        System.out.println("1. View profile");
+        System.out.println("2. Courses");
+        System.out.println("3. Academic");
+        System.out.println("4. Campus");
+        System.out.println("5. Support");
+        System.out.println("6. Research");
+        System.out.println("0. Logout");
     }
 
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "15": viewSetSupervisor();  break;
-            case "16": publishPaper();       break;
-            case "17": viewPapers();         break;
-            case "18": researchProjects();   break;
-            default:   super.handleChoice(choice);
+            case "6": researchMenu(); break;
+            default:  super.handleChoice(choice);
+        }
+    }
+
+    private void researchMenu() {
+        while (true) {
+            System.out.println("\n--- Graduate Student Menu: Research ---");
+            System.out.println("1. View / set supervisor");
+            System.out.println("2. Publish research paper");
+            System.out.println("3. View my papers");
+            System.out.println("4. View / join research projects");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewSetSupervisor();  break;
+                case "2": publishPaper();       break;
+                case "3": viewPapers();         break;
+                case "4": researchProjects();   break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
         }
     }
 
@@ -63,8 +68,7 @@ public class GraduateStudentMenu extends StudentMenu {
         if (gradStudent.getSupervisor() != null) {
             Researcher sup = gradStudent.getSupervisor();
             String name = sup instanceof User
-                    ? ((User) sup).getFirstName() + " " + ((User) sup).getLastName()
-                    : "Unknown";
+                    ? ((User) sup).getFirstName() + " " + ((User) sup).getLastName() : "Unknown";
             System.out.println("Current supervisor : " + name);
             System.out.println("H-index            : " + sup.calculateHindex());
             System.out.println("Papers             : " + sup.getPapers().size());
@@ -72,37 +76,33 @@ public class GraduateStudentMenu extends StudentMenu {
             System.out.println("No supervisor assigned yet.");
         }
 
-        System.out.println("\nAssign a new supervisor? (y/n)");
-        System.out.print("Choice: ");
+        System.out.print("Assign a new supervisor? (y/n): ");
         if (!scanner.nextLine().trim().equalsIgnoreCase("y")) return;
 
         List<Researcher> researchers = new ArrayList<>();
         for (User u : storage.getUsers().values())
             if (u instanceof Researcher) researchers.add((Researcher) u);
-
         if (researchers.isEmpty()) { System.out.println("No researchers found."); return; }
 
         System.out.println("\n--- Available Supervisors ---");
         for (int i = 0; i < researchers.size(); i++) {
             Researcher r = researchers.get(i);
             String name = r instanceof User
-                    ? ((User) r).getFirstName() + " " + ((User) r).getLastName()
-                    : "Unknown";
+                    ? ((User) r).getFirstName() + " " + ((User) r).getLastName() : "Unknown";
             System.out.println((i + 1) + ". " + name
                     + " | h-index: " + r.calculateHindex()
                     + " | papers: " + r.getPapers().size());
         }
-        System.out.print("Choice: ");
+        System.out.print("Choice (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (idx < 0 || idx >= researchers.size()) { System.out.println("Invalid."); return; }
+        if (idx < 0 || idx >= researchers.size()) { System.out.println("Cancelled."); return; }
 
         try {
             gradStudent.setSupervisor(researchers.get(idx));
             storage.updateAndSave();
             Researcher assigned = researchers.get(idx);
             String name = assigned instanceof User
-                    ? ((User) assigned).getFirstName() + " " + ((User) assigned).getLastName()
-                    : "Unknown";
+                    ? ((User) assigned).getFirstName() + " " + ((User) assigned).getLastName() : "Unknown";
             System.out.println("Supervisor assigned: " + name);
         } catch (LowHIndexSupervisorException e) {
             System.out.println("Cannot assign supervisor: " + e.getMessage());
@@ -110,15 +110,12 @@ public class GraduateStudentMenu extends StudentMenu {
     }
 
     private void publishPaper() {
-        System.out.println("\n--- Publish Research Paper ---");
-        System.out.print("Title: ");
+        System.out.print("Title (0 to cancel): ");
         String title = scanner.nextLine().trim();
-        System.out.print("Journal: ");
-        String journal = scanner.nextLine().trim();
-        System.out.print("Pages: ");
-        int pages = parseIntSafe(scanner.nextLine().trim(), 1);
-        System.out.print("DOI: ");
-        String doi = scanner.nextLine().trim();
+        if (title.equals("0")) return;
+        System.out.print("Journal: "); String journal = scanner.nextLine().trim();
+        System.out.print("Pages: ");   int pages      = parseIntSafe(scanner.nextLine().trim(), 1);
+        System.out.print("DOI: ");     String doi     = scanner.nextLine().trim();
 
         ResearchPaper paper = new ResearchPaper(title, journal, pages, doi);
         paper.getAuthors().add(gradStudent);
@@ -128,11 +125,7 @@ public class GraduateStudentMenu extends StudentMenu {
     }
 
     private void viewPapers() {
-        if (gradStudent.getPapers().isEmpty()) {
-            System.out.println("No papers published yet.");
-
-            return;
-        }
+        if (gradStudent.getPapers().isEmpty()) { System.out.println("No papers published yet."); return; }
         System.out.println("H-index: " + gradStudent.calculateHindex());
         System.out.println("Sort by: 1. Citations  2. Date  3. Length");
         System.out.print("Choice: ");
@@ -144,24 +137,24 @@ public class GraduateStudentMenu extends StudentMenu {
     }
 
     private void researchProjects() {
-        System.out.println("\n--- Research Projects ---");
-        System.out.println("1. View available projects");
-        System.out.println("2. Create new project");
-        System.out.print("Choice: ");
-        switch (scanner.nextLine().trim()) {
-            case "1": viewAndJoinProjects(); break;
-            case "2": createProject();       break;
-            default:  System.out.println("Invalid.");
+        while (true) {
+            System.out.println("\n--- Graduate Student Menu: Research Projects ---");
+            System.out.println("1. View available projects");
+            System.out.println("2. Create new project");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewAndJoinProjects(); break;
+                case "2": createProject();       break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
         }
     }
 
     private void viewAndJoinProjects() {
         List<ResearchProject> projects = storage.getResearchProjects();
-        if (projects.isEmpty()) {
-            System.out.println("No research projects available.");
-
-            return;
-        }
+        if (projects.isEmpty()) { System.out.println("No research projects available."); return; }
 
         System.out.println("\n--- Available Projects ---");
         for (int i = 0; i < projects.size(); i++) {
@@ -170,17 +163,19 @@ public class GraduateStudentMenu extends StudentMenu {
                     + " | Participants: " + p.getParticipants().size()
                     + " | Papers: " + p.getPublishedPapers().size());
         }
-        System.out.print("Join a project? Enter number or 0 to cancel: ");
+        System.out.print("Join a project (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
-        if (idx < 0 || idx >= projects.size()) return;
+        if (idx < 0 || idx >= projects.size()) { System.out.println("Cancelled."); return; }
 
         projects.get(idx).addParticipant((Researcher) gradStudent);
         storage.updateAndSave();
+        System.out.println("Joined project: " + projects.get(idx).getTopic());
     }
 
     private void createProject() {
-        System.out.print("Project topic: ");
+        System.out.print("Project topic (0 to cancel): ");
         String topic = scanner.nextLine().trim();
+        if (topic.equals("0")) return;
         String id = "PROJ" + System.currentTimeMillis();
         ResearchProject project = new ResearchProject(id, topic);
         project.addParticipant((Researcher) gradStudent);

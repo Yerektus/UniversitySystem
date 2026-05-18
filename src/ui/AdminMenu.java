@@ -24,36 +24,24 @@ public class AdminMenu extends BaseMenu {
     @Override
     protected void printMenu() {
         System.out.println("\n--- Admin Menu [" + admin.getFirstName() + " " + admin.getLastName() + "] ---");
-        System.out.println("1.  View profile");
-        System.out.println("2.  View all users");
-        System.out.println("3.  Add user");
-        System.out.println("4.  Remove user");
-        System.out.println("5.  Update user");
-        System.out.println("6.  View all requests");
-        System.out.println("7.  Accept a request");
-        System.out.println("8.  Reject a request");
-        System.out.println("9.  View all news");
-        System.out.println("10. View action logs");
-        System.out.println("11. View system stats");
-        System.out.println("0.  Logout");
+        System.out.println("1. View profile");
+        System.out.println("2. User management");
+        System.out.println("3. Requests");
+        System.out.println("4. News");
+        System.out.println("5. System");
+        System.out.println("0. Logout");
     }
 
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1":  viewProfile();   break;
-            case "2":  viewAllUsers();  break;
-            case "3":  addUser();       break;
-            case "4":  removeUser();    break;
-            case "5":  updateUser();    break;
-            case "6":  viewRequests();  break;
-            case "7":  acceptRequest(); break;
-            case "8":  rejectRequest(); break;
-            case "9":  viewAllNews();   break;
-            case "10": viewLogs();      break;
-            case "11": viewStats();     break;
-            case "0":  logout();        break;
-            default:   System.out.println("Invalid choice.");
+            case "1": viewProfile();      break;
+            case "2": userManagement();   break;
+            case "3": requestsMenu();     break;
+            case "4": viewAllNews();      break;
+            case "5": systemMenu();       break;
+            case "0": logout();           break;
+            default:  System.out.println("Invalid choice.");
         }
     }
 
@@ -66,15 +54,71 @@ public class AdminMenu extends BaseMenu {
         System.out.printf("%-12s %s%n",    "Language:",   admin.getLanguage());
     }
 
+    private void userManagement() {
+        while (true) {
+            System.out.println("\n--- Admin Menu: User Management ---");
+            System.out.println("1. View all users");
+            System.out.println("2. Add user");
+            System.out.println("3. Remove user");
+            System.out.println("4. Update user");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewAllUsers(); break;
+                case "2": addUser();      break;
+                case "3": removeUser();   break;
+                case "4": updateUser();   break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void requestsMenu() {
+        while (true) {
+            System.out.println("\n--- Admin Menu: Requests ---");
+            System.out.println("1. View all requests");
+            System.out.println("2. Accept a request");
+            System.out.println("3. Reject a request");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewRequests();  break;
+                case "2": acceptRequest(); break;
+                case "3": rejectRequest(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    private void systemMenu() {
+        while (true) {
+            System.out.println("\n--- Admin Menu: System ---");
+            System.out.println("1. View action logs");
+            System.out.println("2. View system stats");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": viewLogs();  break;
+                case "2": viewStats(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
+    }
+
     private void viewAllUsers() {
         List<User> users = new ArrayList<>(storage.getUsers().values());
         System.out.println("\n--- All Users (" + users.size() + ") ---");
-        System.out.printf("%-4s %-22s %-32s %-25s %-15s%n", "No.", "Name", "Email", "Role", "Department");
+        System.out.printf("%-4s %-12s %-22s %-32s %-20s %-15s%n",
+                "No.", "ID", "Name", "Email", "Role", "Department");
         int i = 1;
         for (User u : users) {
             String dept = (u instanceof Employee) ? ((Employee) u).getDepartment() : "-";
-            System.out.printf("%-4d %-22s %-32s %-25s %-15s%n",
-                    i++, u.getFirstName() + " " + u.getLastName(),
+            System.out.printf("%-4d %-12s %-22s %-32s %-20s %-15s%n",
+                    i++, u.getId(),
+                    u.getFirstName() + " " + u.getLastName(),
                     u.getEmail(), u.getClass().getSimpleName(), dept);
         }
     }
@@ -87,8 +131,10 @@ public class AdminMenu extends BaseMenu {
         System.out.println("4. Manager");
         System.out.println("5. Admin");
         System.out.println("6. Tech Support Specialist");
+        System.out.println("0. Cancel");
         System.out.print("Role: ");
         String roleChoice = scanner.nextLine().trim();
+        if (roleChoice.equals("0")) return;
 
         System.out.print("First name: ");
         String firstName = scanner.nextLine().trim();
@@ -175,6 +221,7 @@ public class AdminMenu extends BaseMenu {
         storage.save(newUser);
         ActionLogger.getInstance().log(admin.getId(), "ADD_USER: " + email);
         System.out.println("Account created.");
+        System.out.println("  ID      : " + newUser.getId());
         System.out.println("  Email   : " + email);
         System.out.println("  Password: " + password);
     }
@@ -185,8 +232,9 @@ public class AdminMenu extends BaseMenu {
 
         System.out.println("\n--- Update User ---");
         for (int i = 0; i < users.size(); i++)
-            System.out.printf("%-4d [%-25s] %s %s%n",
-                    i + 1, users.get(i).getClass().getSimpleName(),
+            System.out.printf("%-4d %-12s [%-20s] %s %s%n",
+                    i + 1, users.get(i).getId(),
+                    users.get(i).getClass().getSimpleName(),
                     users.get(i).getFirstName(), users.get(i).getLastName());
         System.out.print("Select user (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
@@ -219,7 +267,6 @@ public class AdminMenu extends BaseMenu {
             val = scanner.nextLine().trim();
             if (!val.isEmpty()) emp.setDepartment(val);
         }
-
         if (user instanceof Teacher) {
             Teacher t = (Teacher) user;
             System.out.println("Position [" + t.getPosition() + "] 1. TUTOR  2. LECTOR  3. SENIOR  4. PROFESSOR: ");
@@ -233,13 +280,11 @@ public class AdminMenu extends BaseMenu {
                 }
             }
         }
-
         if (user instanceof Student) {
             Student s = (Student) user;
             System.out.print("Major [" + s.getMajor() + "]: ");
             val = scanner.nextLine().trim();
             if (!val.isEmpty()) s.setMajor(val);
-
             System.out.print("Year [" + s.getYear() + "]: ");
             val = scanner.nextLine().trim();
             if (!val.isEmpty()) s.setYear(parseIntSafe(val, s.getYear()));
@@ -256,11 +301,11 @@ public class AdminMenu extends BaseMenu {
 
         System.out.println("\n--- Remove User ---");
         for (int i = 0; i < users.size(); i++)
-            System.out.printf("%-4d [%-25s] %s %s  (%s)%n",
-                    i + 1, users.get(i).getClass().getSimpleName(),
-                    users.get(i).getFirstName(), users.get(i).getLastName(), users.get(i).getEmail());
-
-        System.out.print("Select user to remove (0 to cancel): ");
+            System.out.printf("%-4d %-12s [%-20s] %s %s%n",
+                    i + 1, users.get(i).getId(),
+                    users.get(i).getClass().getSimpleName(),
+                    users.get(i).getFirstName(), users.get(i).getLastName());
+        System.out.print("Select user (0 to cancel): ");
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
         if (idx < 0 || idx >= users.size()) { System.out.println("Cancelled."); return; }
 
@@ -302,6 +347,7 @@ public class AdminMenu extends BaseMenu {
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
         if (idx < 0 || idx >= pending.size()) { System.out.println("Cancelled."); return; }
         admin.acceptRequest(pending.get(idx));
+        storage.updateAndSave();
     }
 
     private void rejectRequest() {
@@ -320,6 +366,7 @@ public class AdminMenu extends BaseMenu {
         int idx = parseIntSafe(scanner.nextLine().trim(), 0) - 1;
         if (idx < 0 || idx >= pending.size()) { System.out.println("Cancelled."); return; }
         pending.get(idx).updateStatus(RequestStatus.REJECTED);
+        storage.updateAndSave();
         System.out.println("Request rejected.");
     }
 
@@ -344,20 +391,20 @@ public class AdminMenu extends BaseMenu {
     }
 
     private void viewStats() {
-        long students  = storage.getUsers().values().stream().filter(u -> u instanceof Student).count();
-        long teachers  = storage.getUsers().values().stream().filter(u -> u instanceof Teacher).count();
-        long staff     = storage.getUsers().values().stream().filter(u -> u instanceof Employee && !(u instanceof Teacher)).count();
+        long students = storage.getUsers().values().stream().filter(u -> u instanceof Student).count();
+        long teachers = storage.getUsers().values().stream().filter(u -> u instanceof Teacher).count();
+        long staff    = storage.getUsers().values().stream().filter(u -> u instanceof Employee && !(u instanceof Teacher)).count();
         System.out.println("\n--- System Statistics ---");
-        System.out.printf("%-25s %d%n", "Total Users:",    storage.getUsers().size());
-        System.out.printf("%-25s %d%n", "Students:",       students);
-        System.out.printf("%-25s %d%n", "Teachers:",       teachers);
-        System.out.printf("%-25s %d%n", "Staff:",          staff);
-        System.out.printf("%-25s %d%n", "Courses:",        storage.getCourses().size());
-        System.out.printf("%-25s %d%n", "Lesson Groups:",  storage.getLessonGroups().size());
-        System.out.printf("%-25s %d%n", "Organizations:",  storage.getOrganizations().size());
-        System.out.printf("%-25s %d%n", "Journals:",       storage.getJournals().size());
-        System.out.printf("%-25s %d%n", "Requests:",       storage.getRequests().size());
-        System.out.printf("%-25s %d%n", "News:",           storage.getNewsList().size());
+        System.out.printf("%-25s %d%n", "Total Users:",   storage.getUsers().size());
+        System.out.printf("%-25s %d%n", "Students:",      students);
+        System.out.printf("%-25s %d%n", "Teachers:",      teachers);
+        System.out.printf("%-25s %d%n", "Staff:",         staff);
+        System.out.printf("%-25s %d%n", "Courses:",       storage.getCourses().size());
+        System.out.printf("%-25s %d%n", "Lesson Groups:", storage.getLessonGroups().size());
+        System.out.printf("%-25s %d%n", "Organizations:", storage.getOrganizations().size());
+        System.out.printf("%-25s %d%n", "Journals:",      storage.getJournals().size());
+        System.out.printf("%-25s %d%n", "Requests:",      storage.getRequests().size());
+        System.out.printf("%-25s %d%n", "News:",          storage.getNewsList().size());
     }
 
     private Language parseLanguage(String choice) {
