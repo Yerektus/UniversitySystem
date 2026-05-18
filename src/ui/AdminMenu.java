@@ -35,12 +35,12 @@ public class AdminMenu extends BaseMenu {
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1": viewProfile();      break;
-            case "2": userManagement();   break;
-            case "3": requestsMenu();     break;
-            case "4": viewAllNews();      break;
-            case "5": systemMenu();       break;
-            case "0": logout();           break;
+            case "1": viewProfile(); break;
+            case "2": userManagement(); break;
+            case "3": requestsMenu(); break;
+            case "4": viewAllNews(); break;
+            case "5": systemMenu(); break;
+            case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
     }
@@ -75,9 +75,9 @@ public class AdminMenu extends BaseMenu {
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
                 case "1": viewAllUsers(); break;
-                case "2": addUser();      break;
-                case "3": removeUser();   break;
-                case "4": updateUser();   break;
+                case "2": addUser(); break;
+                case "3": removeUser(); break;
+                case "4": updateUser(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -93,7 +93,7 @@ public class AdminMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewRequests();  break;
+                case "1": viewRequests(); break;
                 case "2": acceptRequest(); break;
                 case "3": rejectRequest(); break;
                 case "0": return;
@@ -110,7 +110,7 @@ public class AdminMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewLogs();  break;
+                case "1": viewLogs(); break;
                 case "2": viewStats(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
@@ -169,8 +169,7 @@ public class AdminMenu extends BaseMenu {
                 System.out.print("Year (1-4): ");
                 int year = parseIntSafe(scanner.nextLine().trim(), 1);
                 id = util.UserCredentialGenerator.generateStudentId("B", school);
-                newUser = new Student(id, password, firstName, lastName, email, language, major, year);
-                break;
+                newUser = new Student(id, password, firstName, lastName, email, language, major, year); break;
             }
             case "2": {
                 SchoolCode school = selectSchool();
@@ -184,8 +183,7 @@ public class AdminMenu extends BaseMenu {
                 System.out.print("Research target/topic: ");
                 String target = scanner.nextLine().trim();
                 id = util.UserCredentialGenerator.generateStudentId(degreeType, school);
-                newUser = new GraduateStudent(id, password, firstName, lastName, email, language, major, year, gt, target);
-                break;
+                newUser = new GraduateStudent(id, password, firstName, lastName, email, language, major, year, gt, target); break;
             }
             case "3": {
                 SchoolCode school = selectSchool();
@@ -198,8 +196,7 @@ public class AdminMenu extends BaseMenu {
                     default:  pos = TeacherPosition.LECTOR;    break;
                 }
                 id = util.UserCredentialGenerator.generateTeacherId(school);
-                newUser = new Teacher(id, password, firstName, lastName, email, language, department, pos);
-                break;
+                newUser = new Teacher(id, password, firstName, lastName, email, language, department, pos); break;
             }
             case "4": {
                 SchoolCode school = selectSchool();
@@ -211,17 +208,12 @@ public class AdminMenu extends BaseMenu {
                     default:  mType = ManagerType.OR;          break;
                 }
                 id = util.UserCredentialGenerator.generateManagerId(school);
-                newUser = new Manager(id, password, firstName, lastName, email, language, department, mType);
-                break;
+                newUser = new Manager(id, password, firstName, lastName, email, language, department, mType); break;
             }
-            case "5":
-                id = util.UserCredentialGenerator.generateAdminId();
-                newUser = new Admin(id, password, firstName, lastName, email, language, department);
-                break;
-            case "6":
-                id = util.UserCredentialGenerator.generateTechSupportId();
-                newUser = new TechSupportSpecialist(id, password, firstName, lastName, email, language, department);
-                break;
+            case "5": id = util.UserCredentialGenerator.generateAdminId();
+                newUser = new Admin(id, password, firstName, lastName, email, language, department); break;
+            case "6": id = util.UserCredentialGenerator.generateTechSupportId();
+                newUser = new TechSupportSpecialist(id, password, firstName, lastName, email, language, department); break;
             default:
                 System.out.println("Invalid role.");
                 return;
@@ -283,9 +275,9 @@ public class AdminMenu extends BaseMenu {
             val = scanner.nextLine().trim();
             if (!val.isEmpty()) {
                 switch (val) {
-                    case "1": t.setPosition(TeacherPosition.TUTOR);     break;
-                    case "2": t.setPosition(TeacherPosition.LECTOR);    break;
-                    case "3": t.setPosition(TeacherPosition.SENIOR);    break;
+                    case "1": t.setPosition(TeacherPosition.TUTOR); break;
+                    case "2": t.setPosition(TeacherPosition.LECTOR); break;
+                    case "3": t.setPosition(TeacherPosition.SENIOR); break;
                     case "4": t.setPosition(TeacherPosition.PROFESSOR); break;
                 }
             }

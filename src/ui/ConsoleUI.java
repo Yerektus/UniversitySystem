@@ -28,11 +28,9 @@ public class ConsoleUI {
         String choice = scanner.nextLine().trim();
         switch (choice) {
             case "1": login(); break;
-            case "0":
-                System.out.println("Goodbye!");
+            case "0": System.out.println("Goodbye!");
                 storage.saveAll();
-                System.exit(0);
-                break;
+                System.exit(0); break;
             default:
                 System.out.println("Invalid choice. Try again.");
         }

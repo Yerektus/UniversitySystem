@@ -32,10 +32,10 @@ public class TechSupportMenu extends BaseMenu {
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1": viewProfile();   break;
-            case "2": requestsMenu();  break;
+            case "1": viewProfile(); break;
+            case "2": requestsMenu(); break;
             case "3": submitRequest(); break;
-            case "0": logout();        break;
+            case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
     }
@@ -71,7 +71,7 @@ public class TechSupportMenu extends BaseMenu {
             switch (scanner.nextLine().trim()) {
                 case "1": viewNewRequests(); break;
                 case "2": viewAllRequests(); break;
-                case "3": processRequest();  break;
+                case "3": processRequest(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -150,7 +150,7 @@ public class TechSupportMenu extends BaseMenu {
         switch (scanner.nextLine().trim()) {
             case "1": request.updateStatus(RequestStatus.ACCEPTED); break;
             case "2": request.updateStatus(RequestStatus.REJECTED); break;
-            case "3": request.updateStatus(RequestStatus.DONE);     break;
+            case "3": request.updateStatus(RequestStatus.DONE); break;
             case "0": System.out.println("Cancelled."); return;
             default:  System.out.println("Invalid action."); return;
         }

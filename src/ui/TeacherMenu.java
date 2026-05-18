@@ -44,13 +44,11 @@ public class TeacherMenu extends BaseMenu {
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1": viewProfile();   break;
-            case "2": coursesMenu();   break;
-            case "3": commMenu();      break;
-            case "4":
-                if (teacher.getPosition() == TeacherPosition.PROFESSOR) researchMenu();
-                else System.out.println("Invalid choice.");
-                break;
+            case "1": viewProfile(); break;
+            case "2": coursesMenu(); break;
+            case "3": commMenu(); break;
+            case "4": if (teacher.getPosition() == TeacherPosition.PROFESSOR) researchMenu();
+                else System.out.println("Invalid choice."); break;
             case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
@@ -89,8 +87,8 @@ public class TeacherMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewCourses();  break;
-                case "2": putMarks();     break;
+                case "1": viewCourses(); break;
+                case "2": putMarks(); break;
                 case "3": viewStudents(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
@@ -108,8 +106,8 @@ public class TeacherMenu extends BaseMenu {
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
                 case "1": sendComplaint(); break;
-                case "2": sendMessage();   break;
-                case "3": viewInbox();     break;
+                case "2": sendMessage(); break;
+                case "3": viewInbox(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -124,7 +122,7 @@ public class TeacherMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewPapers();   break;
+                case "1": viewPapers(); break;
                 case "2": publishPaper(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
@@ -313,8 +311,8 @@ public class TeacherMenu extends BaseMenu {
         System.out.print("Choice: ");
         switch (scanner.nextLine().trim()) {
             case "1": teacher.printPapers(ResearchPaper.BY_CITATIONS); break;
-            case "3": teacher.printPapers(ResearchPaper.BY_LENGTH);    break;
-            default:  teacher.printPapers(ResearchPaper.BY_DATE);      break;
+            case "3": teacher.printPapers(ResearchPaper.BY_LENGTH); break;
+            default:  teacher.printPapers(ResearchPaper.BY_DATE); break;
         }
     }
 

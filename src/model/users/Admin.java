@@ -7,7 +7,6 @@ import storage.ActionLogger;
 
 public class Admin extends Employee {
 
-
 	public Admin(String id, String password, String firstName, String lastName,
                  String email, Language language, String department) {
         super(id, password, firstName, lastName, email, language, department);

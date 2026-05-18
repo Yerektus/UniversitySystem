@@ -146,7 +146,6 @@ public class DataStorage {
     public void saveMessage(Message message)             { messages.add(message);     saveAll(); }
     public void saveComplaint(Complaint complaint)       { complaints.add(complaint); saveAll(); }
 
-    
     public void publishPaperToJournal(ResearchPaper paper, Journal journal) {
         News announcement = journal.publishPaper(paper);
         if (announcement != null) {
@@ -183,7 +182,6 @@ public class DataStorage {
         newsList.add(topNews);
     }
 
-    
     public void removeUser(String userId) {
         users.remove(userId);
         saveAll();

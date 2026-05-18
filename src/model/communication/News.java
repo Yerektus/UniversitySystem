@@ -44,8 +44,6 @@ public class News implements Serializable {
 
     public void setTopic(String topic) { this.topic = topic; }
 
-
-
     public boolean isPinned() { return pinned; }
 
     public void setPinned(boolean pinned) { this.pinned = pinned; }

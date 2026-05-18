@@ -53,10 +53,10 @@ public class GraduateStudentMenu extends StudentMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewSetSupervisor();  break;
-                case "2": publishPaper();       break;
-                case "3": viewPapers();         break;
-                case "4": researchProjects();   break;
+                case "1": viewSetSupervisor(); break;
+                case "2": publishPaper(); break;
+                case "3": viewPapers(); break;
+                case "4": researchProjects(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -131,8 +131,8 @@ public class GraduateStudentMenu extends StudentMenu {
         System.out.print("Choice: ");
         switch (scanner.nextLine().trim()) {
             case "1": gradStudent.printPapers(ResearchPaper.BY_CITATIONS); break;
-            case "3": gradStudent.printPapers(ResearchPaper.BY_LENGTH);    break;
-            default:  gradStudent.printPapers(ResearchPaper.BY_DATE);      break;
+            case "3": gradStudent.printPapers(ResearchPaper.BY_LENGTH); break;
+            default:  gradStudent.printPapers(ResearchPaper.BY_DATE); break;
         }
     }
 
@@ -145,7 +145,7 @@ public class GraduateStudentMenu extends StudentMenu {
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
                 case "1": viewAndJoinProjects(); break;
-                case "2": createProject();       break;
+                case "2": createProject(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }

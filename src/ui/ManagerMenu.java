@@ -37,14 +37,14 @@ public class ManagerMenu extends BaseMenu {
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1": viewProfile();       break;
+            case "1": viewProfile(); break;
             case "2": createUserAccount(); break;
-            case "3": coursesMenu();       break;
-            case "4": peopleMenu();        break;
-            case "5": newsMenu();          break;
-            case "6": researchMenu();      break;
-            case "7": reportsMenu();       break;
-            case "0": logout();            break;
+            case "3": coursesMenu(); break;
+            case "4": peopleMenu(); break;
+            case "5": newsMenu(); break;
+            case "6": researchMenu(); break;
+            case "7": reportsMenu(); break;
+            case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
     }
@@ -78,9 +78,9 @@ public class ManagerMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": assignCourseToTeacher();    break;
+                case "1": assignCourseToTeacher(); break;
                 case "2": addCourseForRegistration(); break;
-                case "3": approveRegistration();      break;
+                case "3": approveRegistration(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -112,7 +112,7 @@ public class ManagerMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewNews();   break;
+                case "1": viewNews(); break;
                 case "2": createNews(); break;
                 case "3": deleteNews(); break;
                 case "0": return;
@@ -132,9 +132,9 @@ public class ManagerMenu extends BaseMenu {
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
                 case "1": printAllResearchPapers(); break;
-                case "2": topCitedUniversity();     break;
-                case "3": topCitedByYear();          break;
-                case "4": topCitedBySchool();        break;
+                case "2": topCitedUniversity(); break;
+                case "3": topCitedByYear(); break;
+                case "4": topCitedBySchool(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -149,8 +149,8 @@ public class ManagerMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": academicReport();  break;
-                case "2": viewComplaints();  break;
+                case "1": academicReport(); break;
+                case "2": viewComplaints(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -191,8 +191,7 @@ public class ManagerMenu extends BaseMenu {
                 System.out.print("Year (1-4): ");
                 int year = parseIntSafe(scanner.nextLine().trim(), 1);
                 id = util.UserCredentialGenerator.generateStudentId("B", school);
-                user = new Student(id, password, firstName, lastName, email, language, major, year);
-                break;
+                user = new Student(id, password, firstName, lastName, email, language, major, year); break;
             }
             case "2": {
                 SchoolCode school = selectSchool();
@@ -207,8 +206,7 @@ public class ManagerMenu extends BaseMenu {
                 System.out.print("Research target/topic: ");
                 String target = scanner.nextLine().trim();
                 id = util.UserCredentialGenerator.generateStudentId(degreeType, school);
-                user = new GraduateStudent(id, password, firstName, lastName, email, language, major, year, gt, target);
-                break;
+                user = new GraduateStudent(id, password, firstName, lastName, email, language, major, year, gt, target); break;
             }
             case "3": {
                 SchoolCode school = selectSchool();
@@ -222,13 +220,10 @@ public class ManagerMenu extends BaseMenu {
                     default:  pos = TeacherPosition.LECTOR;    break;
                 }
                 id = util.UserCredentialGenerator.generateTeacherId(school);
-                user = new Teacher(id, password, firstName, lastName, email, language, department, pos);
-                break;
+                user = new Teacher(id, password, firstName, lastName, email, language, department, pos); break;
             }
-            case "4":
-                id = util.UserCredentialGenerator.generateTechSupportId();
-                user = new TechSupportSpecialist(id, password, firstName, lastName, email, language, department);
-                break;
+            case "4": id = util.UserCredentialGenerator.generateTechSupportId();
+                user = new TechSupportSpecialist(id, password, firstName, lastName, email, language, department); break;
             default:
                 System.out.println("Invalid role.");
                 return;

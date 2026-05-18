@@ -11,7 +11,6 @@ import java.util.List;
 
 public class ResearchPaper implements Comparable<ResearchPaper>, Serializable {
 
-
     public static final Comparator<ResearchPaper> BY_CITATIONS =
             Comparator.comparingInt(ResearchPaper::getCitations).reversed();
 

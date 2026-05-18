@@ -39,12 +39,12 @@ public class StudentMenu extends BaseMenu {
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1": viewProfile();  break;
-            case "2": coursesMenu();  break;
+            case "1": viewProfile(); break;
+            case "2": coursesMenu(); break;
             case "3": academicMenu(); break;
-            case "4": campusMenu();   break;
-            case "5": supportMenu();  break;
-            case "0": logout();       break;
+            case "4": campusMenu(); break;
+            case "5": supportMenu(); break;
+            case "0": logout(); break;
             default:  System.out.println("Invalid choice.");
         }
     }
@@ -60,9 +60,9 @@ public class StudentMenu extends BaseMenu {
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
                 case "1": viewAvailableCourses(); break;
-                case "2": registerForCourse();    break;
-                case "3": dropCourse();           break;
-                case "4": viewEnrollments();      break;
+                case "2": registerForCourse(); break;
+                case "3": dropCourse(); break;
+                case "4": viewEnrollments(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
@@ -78,7 +78,7 @@ public class StudentMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewMarks();      break;
+                case "1": viewMarks(); break;
                 case "2": viewTranscript(); break;
                 case "3": viewTeacherInfo(); break;
                 case "0": return;
@@ -98,11 +98,11 @@ public class StudentMenu extends BaseMenu {
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             switch (scanner.nextLine().trim()) {
-                case "1": viewOrganizations();  break;
-                case "2": joinOrganization();   break;
-                case "3": viewNews();           break;
-                case "4": addCommentToNews();   break;
-                case "5": rateTeacher();        break;
+                case "1": viewOrganizations(); break;
+                case "2": joinOrganization(); break;
+                case "3": viewNews(); break;
+                case "4": addCommentToNews(); break;
+                case "5": rateTeacher(); break;
                 case "0": return;
                 default:  System.out.println("Invalid choice.");
             }
