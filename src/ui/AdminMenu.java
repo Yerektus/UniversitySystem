@@ -46,12 +46,22 @@ public class AdminMenu extends BaseMenu {
     }
 
     private void viewProfile() {
-        System.out.println("\n--- Profile ---");
-        System.out.printf("%-12s %s%n",    "ID:",         admin.getId());
-        System.out.printf("%-12s %s %s%n", "Name:",       admin.getFirstName(), admin.getLastName());
-        System.out.printf("%-12s %s%n",    "Email:",      admin.getEmail());
-        System.out.printf("%-12s %s%n",    "Department:", admin.getDepartment());
-        System.out.printf("%-12s %s%n",    "Language:",   admin.getLanguage());
+        while (true) {
+            System.out.println("\n--- Admin Menu: Profile ---");
+            System.out.printf("%-12s %s%n",    "ID:",         admin.getId());
+            System.out.printf("%-12s %s %s%n", "Name:",       admin.getFirstName(), admin.getLastName());
+            System.out.printf("%-12s %s%n",    "Email:",      admin.getEmail());
+            System.out.printf("%-12s %s%n",    "Department:", admin.getDepartment());
+            System.out.printf("%-12s %s%n",    "Language:",   admin.getLanguage());
+            System.out.println("\n1. Change language");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": changeLanguage(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
     }
 
     private void userManagement() {

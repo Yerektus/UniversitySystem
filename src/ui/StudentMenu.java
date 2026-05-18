@@ -124,16 +124,26 @@ public class StudentMenu extends BaseMenu {
     }
 
     protected void viewProfile() {
-        System.out.println("\n--- My Profile ---");
-        System.out.printf("%-12s %s%n",     "ID:",        student.getId());
-        System.out.printf("%-12s %s %s%n",  "Name:",      student.getFirstName(), student.getLastName());
-        System.out.printf("%-12s %s%n",     "Email:",     student.getEmail());
-        System.out.printf("%-12s %s%n",     "Major:",     student.getMajor());
-        System.out.printf("%-12s %d%n",     "Year:",      student.getYear());
-        System.out.printf("%-12s %.2f%n",   "GPA:",       student.getGpa());
-        System.out.printf("%-12s %d / %d%n","Credits:",   student.getTotalCredits(), Student.MAX_CREDITS);
-        System.out.printf("%-12s %d%n",     "Fails:",     student.getFailCount());
-        System.out.printf("%-12s %s%n",     "Language:",  student.getLanguage());
+        while (true) {
+            System.out.println("\n--- Student Menu: Profile ---");
+            System.out.printf("%-12s %s%n",     "ID:",        student.getId());
+            System.out.printf("%-12s %s %s%n",  "Name:",      student.getFirstName(), student.getLastName());
+            System.out.printf("%-12s %s%n",     "Email:",     student.getEmail());
+            System.out.printf("%-12s %s%n",     "Major:",     student.getMajor());
+            System.out.printf("%-12s %d%n",     "Year:",      student.getYear());
+            System.out.printf("%-12s %.2f%n",   "GPA:",       student.getGpa());
+            System.out.printf("%-12s %d / %d%n","Credits:",   student.getTotalCredits(), Student.MAX_CREDITS);
+            System.out.printf("%-12s %d%n",     "Fails:",     student.getFailCount());
+            System.out.printf("%-12s %s%n",     "Language:",  student.getLanguage());
+            System.out.println("\n1. Change language");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": changeLanguage(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
     }
 
     private void viewAvailableCourses() {

@@ -50,13 +50,23 @@ public class ManagerMenu extends BaseMenu {
     }
 
     private void viewProfile() {
-        System.out.println("\n--- Profile ---");
-        System.out.printf("%-10s %s%n", "ID:",       manager.getId());
-        System.out.printf("%-10s %s %s%n", "Name:",  manager.getFirstName(), manager.getLastName());
-        System.out.printf("%-10s %s%n", "Email:",    manager.getEmail());
-        System.out.printf("%-10s %s%n", "Dept:",     manager.getDepartment());
-        System.out.printf("%-10s %s%n", "Type:",     manager.getType());
-        System.out.printf("%-10s %s%n", "Language:", manager.getLanguage());
+        while (true) {
+            System.out.println("\n--- Manager Menu: Profile ---");
+            System.out.printf("%-10s %s%n", "ID:",       manager.getId());
+            System.out.printf("%-10s %s %s%n", "Name:",  manager.getFirstName(), manager.getLastName());
+            System.out.printf("%-10s %s%n", "Email:",    manager.getEmail());
+            System.out.printf("%-10s %s%n", "Dept:",     manager.getDepartment());
+            System.out.printf("%-10s %s%n", "Type:",     manager.getType());
+            System.out.printf("%-10s %s%n", "Language:", manager.getLanguage());
+            System.out.println("\n1. Change language");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": changeLanguage(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
+        }
     }
 
     private void coursesMenu() {

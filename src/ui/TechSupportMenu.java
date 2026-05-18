@@ -23,18 +23,39 @@ public class TechSupportMenu extends BaseMenu {
         long newCount = storage.getRequests().stream().filter(r -> r.getStatus() == RequestStatus.NEW).count();
         System.out.println("\n--- Tech Support Menu [" + techSupport.getFirstName()
                 + " " + techSupport.getLastName() + "] ---");
-        System.out.println("1. Requests" + (newCount > 0 ? " (" + newCount + " new)" : ""));
-        System.out.println("2. Submit a request");
+        System.out.println("1. View profile");
+        System.out.println("2. Requests" + (newCount > 0 ? " (" + newCount + " new)" : ""));
+        System.out.println("3. Submit a request");
         System.out.println("0. Logout");
     }
 
     @Override
     protected void handleChoice(String choice) {
         switch (choice) {
-            case "1": requestsMenu();  break;
-            case "2": submitRequest(); break;
+            case "1": viewProfile();   break;
+            case "2": requestsMenu();  break;
+            case "3": submitRequest(); break;
             case "0": logout();        break;
             default:  System.out.println("Invalid choice.");
+        }
+    }
+
+    private void viewProfile() {
+        while (true) {
+            System.out.println("\n--- Tech Support Menu: Profile ---");
+            System.out.printf("%-12s %s%n",    "ID:",         techSupport.getId());
+            System.out.printf("%-12s %s %s%n", "Name:",       techSupport.getFirstName(), techSupport.getLastName());
+            System.out.printf("%-12s %s%n",    "Email:",      techSupport.getEmail());
+            System.out.printf("%-12s %s%n",    "Department:", techSupport.getDepartment());
+            System.out.printf("%-12s %s%n",    "Language:",   techSupport.getLanguage());
+            System.out.println("\n1. Change language");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": changeLanguage(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
         }
     }
 

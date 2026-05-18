@@ -57,16 +57,26 @@ public class TeacherMenu extends BaseMenu {
     }
 
     private void viewProfile() {
-        System.out.println("\n--- Profile ---");
-        System.out.printf("%-10s %s%n",    "ID:",       teacher.getId());
-        System.out.printf("%-10s %s %s%n", "Name:",     teacher.getFirstName(), teacher.getLastName());
-        System.out.printf("%-10s %s%n",    "Email:",    teacher.getEmail());
-        System.out.printf("%-10s %s%n",    "Dept:",     teacher.getDepartment());
-        System.out.printf("%-10s %s%n",    "Position:", teacher.getPosition());
-        System.out.printf("%-10s %s%n",    "Language:", teacher.getLanguage());
-        if (teacher.getPosition() == TeacherPosition.PROFESSOR) {
-            System.out.printf("%-10s %d%n", "H-index:", teacher.calculateHindex());
-            System.out.printf("%-10s %d%n", "Papers:",  teacher.getPapers().size());
+        while (true) {
+            System.out.println("\n--- Teacher Menu: Profile ---");
+            System.out.printf("%-10s %s%n",    "ID:",       teacher.getId());
+            System.out.printf("%-10s %s %s%n", "Name:",     teacher.getFirstName(), teacher.getLastName());
+            System.out.printf("%-10s %s%n",    "Email:",    teacher.getEmail());
+            System.out.printf("%-10s %s%n",    "Dept:",     teacher.getDepartment());
+            System.out.printf("%-10s %s%n",    "Position:", teacher.getPosition());
+            System.out.printf("%-10s %s%n",    "Language:", teacher.getLanguage());
+            if (teacher.getPosition() == TeacherPosition.PROFESSOR) {
+                System.out.printf("%-10s %d%n", "H-index:", teacher.calculateHindex());
+                System.out.printf("%-10s %d%n", "Papers:",  teacher.getPapers().size());
+            }
+            System.out.println("\n1. Change language");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            switch (scanner.nextLine().trim()) {
+                case "1": changeLanguage(); break;
+                case "0": return;
+                default:  System.out.println("Invalid choice.");
+            }
         }
     }
 

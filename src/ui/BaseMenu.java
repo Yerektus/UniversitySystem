@@ -1,5 +1,6 @@
 package ui;
 
+import model.enums.Language;
 import model.users.User;
 import storage.DataStorage;
 
@@ -35,6 +36,25 @@ public abstract class BaseMenu {
         currentUser.logout();
         System.out.println("You have been logged out.");
         running = false;
+    }
+
+    protected void changeLanguage() {
+        System.out.println("\n--- Change Language ---");
+        System.out.println("Current: " + currentUser.getLanguage());
+        System.out.println("1. KZ");
+        System.out.println("2. EN");
+        System.out.println("3. RU");
+        System.out.println("0. Cancel");
+        System.out.print("Choice: ");
+        switch (scanner.nextLine().trim()) {
+            case "1": currentUser.setLanguage(Language.KZ); break;
+            case "2": currentUser.setLanguage(Language.EN); break;
+            case "3": currentUser.setLanguage(Language.RU); break;
+            case "0": return;
+            default: System.out.println("Invalid choice."); return;
+        }
+        storage.updateAndSave();
+        System.out.println("Language changed to: " + currentUser.getLanguage());
     }
 
     protected int parseIntSafe(String input, int defaultVal) {
