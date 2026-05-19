@@ -1,6 +1,6 @@
 # KBTU University System
 
-A research-oriented university management system built in Java for the OOP & Design final project at Kazakh-British Technical University.
+A university management system built in Java for the OOP & Design final project at Kazakh-British Technical University.
 
 ---
 
@@ -10,13 +10,6 @@ A research-oriented university management system built in Java for the OOP & Des
 1. `File → Import → Existing Projects into Workspace`
 2. Select the `UniversitySystem` folder
 3. Run `main/Main.java`
-
-**From the command line:**
-```bash
-find src -name "*.java" > sources.txt
-javac -d bin @sources.txt
-java -cp bin main.Main
-```
 
 > On first run, `src/data/` is created automatically and seeded with default accounts.  
 > To reset all data, delete everything inside `src/data/`.
